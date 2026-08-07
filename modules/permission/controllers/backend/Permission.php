@@ -2,13 +2,7 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 
-/**
-*| --------------------------------------------------------------------------
-*| Permission Controller
-*| --------------------------------------------------------------------------
-*| permission site
-*|
-*/
+// Init section
 class Permission extends Admin	
 {
 	
@@ -246,7 +240,11 @@ class Permission extends Admin
 
 		$this->model_permission->export('aauth_perms', 'permission');
 	}
-}
 
-/* End of file Permission.php */
-/* Location: ./application/controllers/administrator/Permission.php */
+	public function export_pdf()
+	{
+		$this->is_allowed('permission_export');
+		$this->model_permission->pdf('permission', 'permission');
+	}
+
+}

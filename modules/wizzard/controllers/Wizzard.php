@@ -1,13 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-/**
-*| --------------------------------------------------------------------------
-*| Wizzard Controller
-*| --------------------------------------------------------------------------
-*| For setup first application
-*|
-*/
+// Init section
 class Wizzard extends MX_Controller
 {
 	

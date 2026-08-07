@@ -2,13 +2,7 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 
-/**
-*| --------------------------------------------------------------------------
-*| Group Controller
-*| --------------------------------------------------------------------------
-*| group site
-*|
-*/
+// Init section
 class Group extends Admin	
 {
 

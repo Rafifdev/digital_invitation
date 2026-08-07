@@ -1,13 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-/**
-*| --------------------------------------------------------------------------
-*| Not found Controller
-*| --------------------------------------------------------------------------
-*| For default controller
-*|
-*/
+// Init section
 class Not_found extends Front
 {
 	

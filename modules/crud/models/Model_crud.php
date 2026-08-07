@@ -81,6 +81,7 @@ class Model_crud extends MY_Model {
 
 	public function get_input_type()
 	{
+		$this->db->select('validation_group');
 		$this->db->group_by('validation_group');
 		$result = $this->db->get('crud_input_type');
 

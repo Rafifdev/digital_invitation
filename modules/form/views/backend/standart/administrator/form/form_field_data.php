@@ -1,4 +1,5 @@
- <table class="table table-responsive table table-striped table-form"  id="diagnosis_list">
+<div class="table-wrapper table-responsive">
+<table class="table table-striped table-form" id="diagnosis_list">
   
    <tbody>
       <?php $i=0; foreach ($this->db->field_data($table) as $row):  $i++; ?>
@@ -115,3 +116,4 @@
       <?php endforeach; ?>
    </tbody>
 </table>
+</div>

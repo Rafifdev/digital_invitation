@@ -1,3 +1,14 @@
+.table-wrapper {
+   width: 100%;
+   overflow-x: auto;
+   -webkit-overflow-scrolling: touch;
+   margin-bottom: 15px;
+}
+
+#diagnosis_list {
+   min-width: 750px;
+}
+
 .table .chosen-container {
    width: 100% !important;
 }

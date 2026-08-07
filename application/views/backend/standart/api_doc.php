@@ -9,6 +9,6 @@
 </section>
 <script type="text/javascript">
   $(document).ready(function(){
-    $('.web-body').addClass('sidebar-collapse');
+    // sidebar collapse removed to keep sidebar open by default
   })
 </script>

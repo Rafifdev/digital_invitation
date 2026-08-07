@@ -2,13 +2,7 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 
-/**
-*| --------------------------------------------------------------------------
-*| Form Test Controller
-*| --------------------------------------------------------------------------
-*| Form Test site
-*|
-*/
+// Init section
 class Form_test extends Admin	
 {
 	

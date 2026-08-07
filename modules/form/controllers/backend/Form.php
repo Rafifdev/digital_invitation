@@ -2,13 +2,7 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 
-/**
-*| --------------------------------------------------------------------------
-*| Form Controller
-*| --------------------------------------------------------------------------
-*| form site
-*|
-*/
+// Init section
 class Form extends Admin	
 {
 	public function __construct()

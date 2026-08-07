@@ -1,13 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-/**
-*| --------------------------------------------------------------------------
-*| Page Controller
-*| --------------------------------------------------------------------------
-*| Page site
-*|
-*/
+// Init section
 class Page extends Admin	
 {
 	
