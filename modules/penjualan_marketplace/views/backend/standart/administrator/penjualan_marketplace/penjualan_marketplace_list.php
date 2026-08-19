@@ -232,7 +232,7 @@ $status_display = [
                            <tr>
                               <td class="text-center"><input type="checkbox" class="check_item" value="<?= $so->id; ?>"></td>
                               <td>
-                                 <strong class="text-primary"><a href="<?= site_url('administrator/sales_order/view/' . $so->id); ?>"><?= _ent($display_no_pesanan); ?></a></strong><br>
+                                 <strong class="text-primary"><a href="<?= site_url('administrator/penjualan_marketplace/view/' . $so->id); ?>"><?= _ent($display_no_pesanan); ?></a></strong><br>
                                  <small class="text-muted"><?= _ent($so->nomor_so); ?></small>
                               </td>
                               <td class="text-center">
@@ -258,14 +258,8 @@ $status_display = [
                               </td>
                               <td class="text-center"><span class="text-muted">-</span></td>
                               <td class="text-center">
-                                 <a href="<?= site_url('administrator/sales_order/view/' . $so->id); ?>" class="btn btn-default btn-xs" title="Lihat Detail"><i class="fa fa-eye"></i></a>
-                                 <a href="<?= site_url('administrator/sales_order/cetak/' . $so->id); ?>" target="_blank" class="btn btn-info btn-xs" title="Cetak PDF"><i class="fa fa-print"></i></a>
-                                 <?php if ($so->status == 'draft' && is_allowed('sales_order_update', false)): ?>
-                                    <a href="<?= site_url('administrator/sales_order/edit/'.$so->id); ?>" class="btn btn-warning btn-xs" title="Edit"><i class="fa fa-edit"></i></a>
-                                 <?php endif; ?>
-                                 <?php if (is_allowed('sales_order_delete', false) && $so->status == 'draft'): ?>
-                                    <a href="javascript:void(0);" data-href="<?= site_url('administrator/sales_order/delete/' . $so->id); ?>" class="btn btn-danger btn-xs remove-data" title="Hapus"><i class="fa fa-trash"></i></a>
-                                 <?php endif; ?>
+                                 <a href="<?= site_url('administrator/penjualan_marketplace/view/' . $so->id); ?>" class="btn btn-default btn-xs" title="Lihat Detail"><i class="fa fa-eye"></i></a>
+                                 <a href="<?= site_url('administrator/penjualan_marketplace/export_pdf'); ?>" target="_blank" class="btn btn-info btn-xs" title="Cetak PDF"><i class="fa fa-print"></i></a>
                               </td>
                            </tr>
                            <?php endforeach; ?>

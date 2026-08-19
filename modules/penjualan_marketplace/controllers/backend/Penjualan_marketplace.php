@@ -39,8 +39,8 @@ class Penjualan_marketplace extends Admin
 		$this->is_allowed('sales_order_view');
 		$this->data['so']    = $this->Model_penjualan_marketplace->find_with_detail($id);
 		$this->data['items'] = $this->Model_penjualan_marketplace->get_items($id);
-		$this->template->title('Detail Penjualan Marketplace');
-		$this->render('backend/standart/administrator/sales_order/sales_order_view', $this->data);
+		$this->template->title('Detail Pesanan Online Shop Marketplace');
+		$this->render('backend/standart/administrator/penjualan_marketplace/penjualan_marketplace_view', $this->data);
 	}
 
 	public function download_template_shopee()
