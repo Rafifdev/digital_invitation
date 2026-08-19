@@ -195,7 +195,7 @@ $(document).ready(function(){
       var btn = $(this);
       btn.prop('disabled',true).html('<i class="fa fa-spinner fa-spin"></i> Menyimpan...');
       $.ajax({
-         url: '<?= site_url("administrator/retur_penjualan/add_save"); ?>',
+         url: '<?= $action_url; ?>',
          method: 'POST',
          data: $('#form_retur_jual').serialize(),
          dataType: 'json',

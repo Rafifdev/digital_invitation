@@ -15,8 +15,10 @@ $status_color = ['draft'=>'default','submitted'=>'info','approved'=>'primary','r
          <div class="box-header with-border">
             <h3 class="box-title"><?= _ent($po->nomor_po); ?> &nbsp;<span class="label label-<?= $status_color[$po->status]??'default'; ?>"><?= strtoupper($po->status); ?></span></h3>
             <div class="box-tools pull-right"> <a href="<?= site_url('administrator/purchase_order/cetak/' . $po->id); ?>" target="_blank" class="btn btn-info btn-sm"><i class="fa fa-print"></i> Cetak PDF</a> 
-               <?php if($po->status=='draft'): ?><?php is_allowed('purchase_order_update', function() use ($po){ ?><a href="<?= site_url('administrator/purchase_order/submit/'.$po->id); ?>" class="btn btn-primary btn-sm"><i class="fa fa-paper-plane"></i> Submit</a><?php }); ?><?php endif; ?>
-               <?php if($po->status=='submitted'): ?><?php is_allowed('purchase_order_approve', function() use ($po){ ?><a href="<?= site_url('administrator/purchase_order/approve/'.$po->id); ?>" class="btn btn-success btn-sm"><i class="fa fa-check"></i> Approve</a><a href="<?= site_url('administrator/purchase_order/reject/'.$po->id); ?>" class="btn btn-danger btn-sm"><i class="fa fa-times"></i> Tolak</a><?php }); ?><?php endif; ?>
+               <?php if($po->status=='submitted' && $this->aauth->is_admin()): ?>
+                  <a href="<?= site_url('administrator/purchase_order/approve/'.$po->id); ?>" class="btn btn-success btn-sm"><i class="fa fa-check"></i> Approve</a>
+                  <a href="<?= site_url('administrator/purchase_order/reject/'.$po->id); ?>" class="btn btn-danger btn-sm"><i class="fa fa-times"></i> Tolak</a>
+               <?php endif; ?>
                <?php if(in_array($po->status,['approved','partial'])): ?>
                   <?php is_allowed('penerimaan_barang_add', function() use ($po, $draft_penerimaan){ ?>
                      <?php if(!empty($draft_penerimaan)): ?>
@@ -30,6 +32,16 @@ $status_color = ['draft'=>'default','submitted'=>'info','approved'=>'primary','r
             </div>
          </div>
          <div class="box-body">
+             <?php 
+                $po_thresh = (float) get_option('po_approval_threshold', 50000000);
+                $po_tot = (float)$po->total * (float)($po->kurs ?: 1);
+                if ($po->status == 'submitted' && $po_tot >= $po_thresh):
+             ?>
+                <div class="alert alert-warning" style="border-left: 5px solid #f39c12; background: #fffcf5; color: #8a6d3b; margin-bottom: 20px; border-radius: 4px;">
+                   <h4 style="margin-top:0; font-weight:700;"><i class="icon fa fa-shield text-warning"></i> Perhatian: Approval Wewenang Direktur / Superadmin Required</h4>
+                   <p style="margin-bottom:0;">Nilai transaksi PO ini sebesar <strong>Rp <?= number_format($po_tot, 0, ',', '.'); ?></strong> (melebihi batas threshold approval Rp <?= number_format($po_thresh, 0, ',', '.'); ?>). Pengajuan ini memerlukan konfirmasi approval khusus dari Direktur / Superadmin.</p>
+                </div>
+             <?php endif; ?>
             <div class="row">
                <div class="col-md-6">
                   <table class="table table-condensed">

@@ -1,110 +1,162 @@
-
 <section class="content-header">
-   <h1>Pengaturan HR & Geofencing</h1>
+   <h1>Pengaturan HR & Geofencing <small style="font-weight: 400; color: #777;">Konfigurasi Sistem Karyawan</small></h1>
+   <ol class="breadcrumb" style="background: transparent;">
+      <li><a href="<?= site_url('administrator/dashboard'); ?>"><i class="fa fa-dashboard"></i> Home</a></li>
+      <li class="active">Pengaturan HR</li>
+   </ol>
 </section>
+
+<!-- Leaflet CSS & JS -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<style>
+   .modern-panel { border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 25px; border-top: 4px solid #3c8dbc; background: #fff; }
+   .modern-panel-heading { padding: 15px 25px; border-bottom: 1px solid #eee; }
+   .modern-panel-title { margin: 0; font-size: 16px; font-weight: 600; }
+   .input-group-addon { background-color: #f4f6f9; border-color: #d2d6de; }
+   .setting-section { padding: 25px; }
+   
+   /* Warna spesifik panel */
+   .panel-geo { border-top-color: #3c8dbc; }
+   .panel-geo .modern-panel-heading { background-color: #f0f7fb; border-bottom-color: #d7ebf7; }
+   .panel-geo .modern-panel-title { color: #296b92; }
+
+   .panel-time { border-top-color: #00a65a; }
+   .panel-time .modern-panel-heading { background-color: #ebf7f0; border-bottom-color: #d0ebd8; }
+   .panel-time .modern-panel-title { color: #007540; }
+
+   .panel-pay { border-top-color: #dd4b39; }
+   .panel-pay .modern-panel-heading { background-color: #faebea; border-bottom-color: #f2d0cf; }
+   .panel-pay .modern-panel-title { color: #a93223; }
+
+   .table-denda th { background-color: #dd4b39; color: white; border-color: #c74333 !important; }
+   .table-denda td { vertical-align: middle !important; }
+</style>
+
 <section class="content">
-   <div class="box box-warning">
-      <div class="box-body">
+   <div class="row">
+      <div class="col-md-12">
+         
          <form id="form_pengaturan" method="POST" action="<?= site_url('administrator/hr_pengaturan/save'); ?>">
             
-            <h4 class="text-primary"><i class="fa fa-map-marker"></i> Lokasi Kantor (Geofencing)</h4>
             <div class="row">
-               <div class="col-md-12">
-                  <div class="form-group">
-                     <label>Nama Kantor</label>
-                     <input type="text" class="form-control" name="nama_kantor" value="<?= _ent($pengaturan->nama_kantor ?? ''); ?>" required>
+               <div class="col-md-6">
+                  
+                  <!-- PANEL GEO -->
+                  <div class="modern-panel panel-geo">
+                     <div class="modern-panel-heading">
+                        <h4 class="modern-panel-title"><i class="fa fa-map-marker margin-r-5"></i> Lokasi Kantor (Geofencing)</h4>
+                     </div>
+                     <div class="setting-section">
+                        <div class="form-group">
+                           <label>Kantor Utama (Default) <span class="text-danger">*</span></label>
+                           <div class="input-group">
+                              <span class="input-group-addon"><i class="fa fa-building"></i></span>
+                              <select class="form-control" name="default_kantor_id" id="default_kantor_id">
+                                 <?php foreach($kantors as $kantor): ?>
+                                     <option value="<?= $kantor->id ?>" <?= (isset($pengaturan->default_kantor_id) && $pengaturan->default_kantor_id == $kantor->id) ? 'selected' : ''; ?>>
+                                         <?= _ent($kantor->nama_kantor) ?> (Radius: <?= $kantor->radius_meter ?>m)
+                                     </option>
+                                 <?php endforeach; ?>
+                              </select>
+                           </div>
+                           <small class="text-muted" style="display:block; margin-top:8px;">Karyawan yang tidak diatur penempatan kantornya secara spesifik akan menggunakan titik kordinat Kantor Utama ini sebagai lokasi absensi.</small>
+                        </div>
+                     </div>
                   </div>
                </div>
-               <div class="col-md-5">
-                  <div class="form-group">
-                     <label>Latitude <span class="text-danger">*</span></label>
-                     <input type="text" class="form-control" name="latitude_kantor" id="lat" value="<?= _ent($pengaturan->latitude_kantor ?? ''); ?>" required>
+
+               <div class="col-md-6">
+
+                  <!-- PANEL WAKTU KERJA -->
+                  <div class="modern-panel panel-time">
+                     <div class="modern-panel-heading">
+                        <h4 class="modern-panel-title"><i class="fa fa-clock-o margin-r-5"></i> Pengaturan Jam Kerja</h4>
+                     </div>
+                     <div class="setting-section">
+                        <div class="row">
+                           <div class="col-md-6">
+                              <div class="form-group">
+                                 <label>Jam Masuk Standar</label>
+                                 <div class="input-group">
+                                    <span class="input-group-addon"><i class="fa fa-sign-in text-success"></i></span>
+                                    <input type="time" class="form-control" name="jam_masuk" value="<?= _ent($pengaturan->jam_masuk ?? '08:00'); ?>" required>
+                                 </div>
+                              </div>
+                           </div>
+                           <div class="col-md-6">
+                              <div class="form-group">
+                                 <label>Toleransi Terlambat</label>
+                                 <div class="input-group">
+                                    <input type="number" class="form-control" name="toleransi_terlambat_menit" value="<?= _ent($pengaturan->toleransi_terlambat_menit ?? 15); ?>" required>
+                                    <span class="input-group-addon">Menit</span>
+                                 </div>
+                              </div>
+                           </div>
+                        </div>
+
+                        <div class="row" style="margin-top: 10px;">
+                           <div class="col-md-6">
+                              <div class="form-group">
+                                 <label>Jam Pulang Standar</label>
+                                 <div class="input-group">
+                                    <span class="input-group-addon"><i class="fa fa-sign-out text-danger"></i></span>
+                                    <input type="time" class="form-control" name="jam_pulang" value="<?= _ent($pengaturan->jam_pulang ?? '17:00'); ?>" required>
+                                 </div>
+                              </div>
+                           </div>
+                           <div class="col-md-6">
+                              <div class="form-group">
+                                 <label>Toleransi Pulang Awal</label>
+                                 <div class="input-group">
+                                    <input type="number" class="form-control" name="toleransi_pulang_awal_menit" value="<?= _ent($pengaturan->toleransi_pulang_awal_menit ?? 0); ?>" required>
+                                    <span class="input-group-addon">Menit</span>
+                                 </div>
+                                 <small class="text-muted">Boleh pulang sebelum Jam Pulang.</small>
+                              </div>
+                           </div>
+                        </div>
+
+                        <div class="form-group" style="margin-top: 10px;">
+                           <label>Batas Akhir Jam Pulang (Batas Tutup Absen)</label>
+                           <div class="input-group">
+                              <span class="input-group-addon"><i class="fa fa-ban text-warning"></i></span>
+                              <input type="time" class="form-control" name="batas_jam_pulang" value="<?= _ent($pengaturan->batas_jam_pulang ?? '20:00'); ?>" required>
+                           </div>
+                           <small class="text-muted">Batas maksimal karyawan boleh melakukan absen pulang. Lewat dari jam ini sistem menolak absensi pulang.</small>
+                        </div>
+                     </div>
                   </div>
+
+
+
                </div>
-               <div class="col-md-5">
-                  <div class="form-group">
-                     <label>Longitude <span class="text-danger">*</span></label>
-                     <input type="text" class="form-control" name="longitude_kantor" id="lng" value="<?= _ent($pengaturan->longitude_kantor ?? ''); ?>" required>
-                  </div>
-               </div>
-               <div class="col-md-2">
-                  <div class="form-group">
-                     <label>&nbsp;</label>
-                     <button type="button" class="btn btn-info btn-block" onclick="getLocation()"><i class="fa fa-crosshairs"></i> Get My Location</button>
-                  </div>
-               </div>
-               <div class="col-md-12">
-                  <div class="form-group">
-                     <label>Radius Toleransi WFO (Meter)</label>
-                     <input type="number" class="form-control" name="radius_toleransi_meter" value="<?= _ent($pengaturan->radius_toleransi_meter ?? 50); ?>" required>
-                     <small class="text-muted">Karyawan WFO tidak akan bisa absen jika jarak mereka ke titik kantor melebihi radius ini.</small>
-                  </div>
+               
+
+            </div>
+
+            <!-- ACTION BUTTON -->
+            <div class="row">
+               <div class="col-md-12 text-center" style="margin-bottom: 40px; margin-top: 10px;">
+                  <button type="submit" class="btn btn-primary btn-lg" style="border-radius: 30px; padding: 12px 40px; font-size: 16px; font-weight: bold; box-shadow: 0 4px 10px rgba(60,141,188,0.4); transition: all 0.3s;"><i class="fa fa-save margin-r-5"></i> Simpan Konfigurasi Sistem</button>
                </div>
             </div>
 
-            <hr>
-            <h4 class="text-success"><i class="fa fa-clock-o"></i> Pengaturan Jam Kerja</h4>
-            <div class="row">
-               <div class="col-md-6">
-                  <div class="form-group">
-                     <label>Jam Masuk</label>
-                     <input type="time" class="form-control" name="jam_masuk" value="<?= _ent($pengaturan->jam_masuk ?? '08:00'); ?>" required>
-                  </div>
-               </div>
-               <div class="col-md-6">
-                  <div class="form-group">
-                     <label>Toleransi Terlambat (Menit)</label>
-                     <input type="number" class="form-control" name="toleransi_terlambat_menit" value="<?= _ent($pengaturan->toleransi_terlambat_menit ?? 15); ?>" required>
-                  </div>
-               </div>
-               <div class="col-md-6">
-                  <div class="form-group">
-                     <label>Jam Pulang</label>
-                     <input type="time" class="form-control" name="jam_pulang" value="<?= _ent($pengaturan->jam_pulang ?? '17:00'); ?>" required>
-                  </div>
-               </div>
-               <div class="col-md-6">
-                  <div class="form-group">
-                     <label>Toleransi Pulang Awal (Menit)</label>
-                     <input type="number" class="form-control" name="toleransi_pulang_awal_menit" value="<?= _ent($pengaturan->toleransi_pulang_awal_menit ?? 0); ?>" required>
-                     <small class="text-muted">Menit kebolehan absen pulang sebelum Jam Pulang.</small>
-                  </div>
-               </div>
-            </div>
-
-            <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i> Simpan Pengaturan</button>
          </form>
       </div>
    </div>
 </section>
 
 <script>
-function getLocation() {
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(showPosition, showError);
-    } else { 
-        alert("Geolocation API tidak didukung di browser ini.");
-    }
-}
-function showPosition(position) {
-    $("#lat").val(position.coords.latitude);
-    $("#lng").val(position.coords.longitude);
-    toastr.success("Titik koordinat berhasil didapatkan!");
-}
-function showError(error) {
-    switch(error.code) {
-        case error.PERMISSION_DENIED: alert("Pengguna menolak izin Geolocation."); break;
-        case error.POSITION_UNAVAILABLE: alert("Informasi lokasi tidak tersedia."); break;
-        case error.TIMEOUT: alert("Request timeout saat mendapatkan lokasi."); break;
-        case error.UNKNOWN_ERROR: alert("Terjadi kesalahan yang tidak diketahui."); break;
-    }
-}
-
 $(document).ready(function(){
    $("#form_pengaturan").submit(function(e){
       e.preventDefault();
       var btn = $(this).find('button[type="submit"]');
+      var originalText = btn.html();
+      btn.html('<i class="fa fa-spinner fa-spin margin-r-5"></i> Memproses...');
       btn.prop('disabled', true);
+      
       $.ajax({
          url: $(this).attr('action'),
          type: 'POST',
@@ -112,11 +164,30 @@ $(document).ready(function(){
          dataType: 'json',
          success: function(res){
             if(res.success){
-               window.location.href = res.redirect;
+               toastr.success('Pengaturan HR berhasil disimpan!');
+               setTimeout(function(){
+                  window.location.href = res.redirect;
+               }, 1000);
             }else{
-               alert(res.message);
+               swal({
+                   title: "Gagal Simpan ❌",
+                   text: res.message,
+                   type: "warning",
+                   confirmButtonColor: "#f39c12"
+               });
+               btn.html(originalText);
                btn.prop('disabled', false);
             }
+         },
+         error: function() {
+            swal({
+                title: "Error",
+                text: "Terjadi kesalahan pada server saat menyimpan pengaturan.",
+                type: "error",
+                confirmButtonColor: "#d33"
+            });
+            btn.html(originalText);
+            btn.prop('disabled', false);
          }
       });
    });

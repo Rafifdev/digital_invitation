@@ -278,7 +278,7 @@ $(document).ready(function() {
       
       btn.prop('disabled', true).html('<i class="fa fa-spinner fa-spin"></i> Menyimpan...');
       $.ajax({
-         url: '<?= site_url("administrator/transfer_stok/add_save"); ?>',
+         url: '<?= $action_url; ?>',
          method: 'POST',
          data: $('#form_transfer').serialize(),
          dataType: 'json',

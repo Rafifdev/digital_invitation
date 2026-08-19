@@ -101,7 +101,7 @@ jQuery(document).ready(domo);
                                 <?php $img_url = BASE_URL . 'uploads/user/default.png'; ?>
                                 <?php endif; ?>
                                 <a class="fancybox" rel="group" href="<?= $img_url; ?>">
-                                  <img src="<?= $img_url; ?>" alt="Person" width="50" height="50">
+                                  <img src="<?= $img_url; ?>" alt="Person" width="50" height="50" onerror="this.onerror=null; this.src='<?= BASE_ASSET; ?>admin-lte/dist/img/avatar.png';">
                                 </a>
                                 <?= _ent($user->full_name); ?>
                               </div>

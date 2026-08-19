@@ -6,7 +6,15 @@ class Model_sales_order extends MY_Model {
 
 	private $primary_key 	= 'id';
 	private $table_name 	= 'sales_order';
-	private $field_search 	= ['sales_order.nomor_so', 'pelanggan.nama_pelanggan', 'sales_order.status'];
+	private $field_search 	= [
+		'sales_order.nomor_so', 
+		'sales_order.no_pesanan', 
+		'sales_order.nomor_resi', 
+		'sales_order.username_pembeli', 
+		'sales_order.nama_penerima', 
+		'pelanggan.nama_pelanggan', 
+		'sales_order.status'
+	];
 
 	public function __construct()
 	{
@@ -21,7 +29,7 @@ class Model_sales_order extends MY_Model {
 
 	public function join_available()
 	{
-		$this->db->select('sales_order.*, pelanggan.nama_pelanggan, pelanggan.kode_pelanggan, pelanggan.tipe_pelanggan, gudang.nama_gudang');
+		$this->db->select('sales_order.*, pelanggan.nama_pelanggan, pelanggan.kode_pelanggan, pelanggan.tipe_pelanggan, pelanggan.alamat as alamat_pelanggan, pelanggan.no_telp as telp_pelanggan, gudang.nama_gudang, (SELECT COALESCE(SUM(qty), 1) FROM sales_order_item WHERE sales_order_item.so_id = sales_order.id) as total_qty');
 		$this->db->join('pelanggan', 'pelanggan.id = sales_order.pelanggan_id', 'LEFT');
 		$this->db->join('gudang', 'gudang.id = sales_order.gudang_id', 'LEFT');
 		return $this;
@@ -88,6 +96,9 @@ class Model_sales_order extends MY_Model {
 		if (!empty($status)) {
 			$where .= ($where ? ' AND ' : '') . "sales_order.status = " . $this->db->escape($status);
 		}
+
+		// Strictly filter for Offline Sales Orders
+		$where .= ($where ? ' AND ' : '') . "(sales_order.source = 'manual' OR sales_order.source IS NULL OR sales_order.source = '')";
 
 		return $where;
 	}

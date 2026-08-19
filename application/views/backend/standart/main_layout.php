@@ -26,7 +26,7 @@
   <link rel="stylesheet" href="<?= BASE_ASSET; ?>toastr/build/toastr.css">
   <link rel="stylesheet" href="<?= BASE_ASSET; ?>fancy-box/source/jquery.fancybox.css?v=2.1.5" media="screen" />
   <link rel="stylesheet" href="<?= BASE_ASSET; ?>chosen/chosen.css">
-  <link rel="stylesheet" href="<?= BASE_ASSET; ?>css/custom.css?v=<?= time(); ?>">
+  <link rel="stylesheet" href="<?= BASE_ASSET; ?>css/custom.css?v=<?= VERSION; ?>">
   <link rel="stylesheet" href="<?= BASE_ASSET; ?>datetimepicker/jquery.datetimepicker.css"/>
   <link rel="stylesheet" href="<?= BASE_ASSET; ?>js-scroll/style/jquery.jscrollpane.css" rel="stylesheet" media="all" />
   <link rel="stylesheet" href="<?= BASE_ASSET; ?>flag-icon/css/flag-icon.css" rel="stylesheet" media="all" />
@@ -91,8 +91,13 @@
         "positionClass": "toast-top-center",
       }
 
-      var f_message = '<?= $this->session->flashdata('f_message'); ?>';
+      var f_message = '<?= str_replace("'", "\'", $this->session->flashdata('f_message') ?? ''); ?>';
       var f_type = '<?= $this->session->flashdata('f_type'); ?>';
+      <?php 
+      // Force clear flashdata to prevent it from persisting across pages due to session race conditions
+      $this->session->unset_userdata('f_message'); 
+      $this->session->unset_userdata('f_type'); 
+      ?>
 
       if (f_message.length > 0) {
         toastr[f_type](f_message);
@@ -138,14 +143,36 @@
       <div class="navbar-custom-menu">
         <ul class="nav navbar-nav">
 
+          <!-- Notifications Menu -->
+          <li class="dropdown notifications-menu" id="notif-approval-menu">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" title="Notifikasi">
+              <i class="fa fa-bell-o" style="font-size: 16px;"></i>
+              <span class="label label-warning" id="notif-approval-badge" style="display:none; position: absolute; top: 9px; right: 7px; text-align: center; font-size: 9px; padding: 2px 5px; border-radius: 10px;">0</span>
+            </a>
+            <ul class="dropdown-menu" style="width: 320px; border-radius: 6px; box-shadow: 0 5px 25px rgba(0,0,0,0.15); border: none;">
+              <li class="header" style="background: #f8f9fa; padding: 12px 15px; font-weight: 700; color: #2c3e50; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center;">
+                <span><i class="fa fa-bell text-yellow" style="margin-right: 5px;"></i> <span id="notif-header-title">Notifikasi</span></span>
+                <span class="badge bg-yellow" id="notif-header-count">0</span>
+              </li>
+              <li>
+                <ul class="menu" id="notif-approval-list" style="max-height: 280px; overflow-y: auto; padding: 0; margin: 0; list-style: none;">
+                  <li style="text-align: center; padding: 20px; color: #95a5a6;"><i class="fa fa-spin fa-spinner"></i> Memuat notifikasi...</li>
+                </ul>
+              </li>
+              <li class="footer" style="background: #f8f9fa; text-align: center; padding: 8px; border-top: 1px solid #eee;">
+                <a href="<?= site_url('administrator/purchase_order'); ?>" id="notif-footer-link" style="color: #3498db; font-weight: 600; font-size: 12px;"><i class="fa fa-list"></i> Lihat Selengkapnya</a>
+              </li>
+            </ul>
+          </li>
+
           <li class="dropdown user user-menu">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-              <img src="<?= BASE_URL.'uploads/user/'.(!empty(get_user_data('avatar')) ? get_user_data('avatar') :'default.png'); ?>" class="user-image" alt="User Image">
+              <img src="<?= BASE_URL.'uploads/user/'.(!empty(get_user_data('avatar')) ? get_user_data('avatar') :'default.png'); ?>" class="user-image" alt="User Image" onerror="this.onerror=null; this.src='<?= BASE_ASSET; ?>admin-lte/dist/img/avatar.png';">
               <span class="hidden-xs"><?= _ent(ucwords(clean_snake_case(get_user_data('full_name')))); ?></span>
             </a>
             <ul class="dropdown-menu">
               <li class="user-header">
-                <img src="<?= BASE_URL.'uploads/user/'.(!empty(get_user_data('avatar')) ? get_user_data('avatar') :'default.png'); ?>" class="img-circle" alt="User Image">
+                <img src="<?= BASE_URL.'uploads/user/'.(!empty(get_user_data('avatar')) ? get_user_data('avatar') :'default.png'); ?>" class="img-circle" alt="User Image" onerror="this.onerror=null; this.src='<?= BASE_ASSET; ?>admin-lte/dist/img/avatar.png';">
 
                 <p>
                   <?= _ent(ucwords(clean_snake_case($this->aauth->get_user()->full_name))); ?> 
@@ -238,6 +265,58 @@ $(document).ready(function(){
          }
       }
    });
+
+   // Approval Notification Loader
+   function loadApprovalNotifications() {
+      $.ajax({
+         url: BASE_URL + 'administrator/dashboard/get_notifications',
+         type: 'GET',
+         dataType: 'json',
+         success: function(res) {
+            if (res && res.success) {
+               if (res.header_title) {
+                  $('#notif-header-title').text(res.header_title);
+               }
+               if (res.footer_url && res.footer_label) {
+                  $('#notif-footer-link').attr('href', res.footer_url).html('<i class="fa fa-list"></i> ' + res.footer_label);
+               }
+
+               var count = res.total_count || 0;
+               if (count > 0) {
+                  $('#notif-approval-badge').text(count > 99 ? '99+' : count).show();
+                  $('#notif-header-count').text(count);
+               } else {
+                  $('#notif-approval-badge').hide();
+                  $('#notif-header-count').text('0');
+               }
+
+               var html = '';
+               if (res.items && res.items.length > 0) {
+                  $.each(res.items, function(i, item) {
+                     html += '<li style="border-bottom: 1px solid #f4f4f4;">';
+                     html += '  <a href="' + item.url + '" style="display: flex; align-items: flex-start; padding: 10px 15px; color: #333; text-decoration: none; transition: background 0.2s;" onmouseover="this.style.background=\'#f9f9f9\'" onmouseout="this.style.background=\'transparent\'">';
+                     html += '    <div style="margin-right: 12px; font-size: 18px; line-height: 1;" class="' + item.icon_bg + '"><i class="fa ' + item.icon + '"></i></div>';
+                     html += '    <div style="flex: 1; overflow: hidden;">';
+                     html += '      <div style="font-weight: 600; font-size: 12px; text-overflow: ellipsis; overflow: hidden; white-space: nowrap; color: #2c3e50;">' + item.title + '</div>';
+                     html += '      <div style="font-size: 11px; color: #7f8c8d; margin-top: 2px;">' + item.subtitle + '</div>';
+                     html += '    </div>';
+                     html += '    <div style="font-size: 10px; color: #bdc3c7; margin-left: 8px; white-space: nowrap;">' + item.date + '</div>';
+                     html += '  </a>';
+                     html += '</li>';
+                  });
+               } else {
+                  html = '<li style="text-align: center; padding: 25px 15px; color: #7f8c8d; font-size: 13px;"><i class="fa fa-check-circle-o text-green" style="font-size: 24px; display: block; margin-bottom: 5px;"></i> Tidak ada notifikasi baru</li>';
+               }
+               $('#notif-approval-list').html(html);
+            }
+         }
+      });
+   }
+
+   if ($('#notif-approval-menu').length > 0) {
+      loadApprovalNotifications();
+      setInterval(loadApprovalNotifications, 30000);
+   }
 });
 </script>
   <footer class="main-footer">
@@ -269,9 +348,7 @@ $(document).ready(function(){
 <script src="<?= BASE_ASSET; ?>admin-lte/plugins/slimScroll/jquery.slimscroll.min.js"></script>
 <script src="<?= BASE_ASSET; ?>admin-lte/plugins/fastclick/fastclick.js"></script>
 <script src="<?= BASE_ASSET; ?>admin-lte/dist/js/app.min.js"></script>
-<script src="<?= BASE_ASSET; ?>admin-lte/dist/js/adminlte.js"></script>
 <script src="<?= BASE_ASSET; ?>js-scroll/script/jquery.jscrollpane.min.js"></script>
-<script src="<?= BASE_ASSET; ?>jquery-switch-button/jquery.switchButton.js"></script>
 <script src="<?= BASE_ASSET; ?>js/custom.js"></script>
 </body>
 </html>

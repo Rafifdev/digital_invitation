@@ -68,7 +68,7 @@ $config['encryption_key'] = 'd879@*1^f*146ae18b44b9a&bb#dc17$866d%efa5';
 // Session Variables
 $config['sess_driver'] = 'files';
 $config['sess_cookie_name'] = '__ssk4gssgso8kgsog4k404g88g0c0gwogwskcsko01';
-$config['sess_expiration'] = 86400;
+$config['sess_expiration'] = 0;
 $config['sess_save_path'] = APPPATH . '/cache/junk';
 $config['sess_match_ip'] = FALSE;
 $config['sess_time_to_update'] = 900;

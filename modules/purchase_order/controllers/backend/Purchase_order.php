@@ -48,7 +48,10 @@ class Purchase_order extends Admin
 		$this->data['nomor_baru'] = $this->model_purchase_order->generate_nomor();
 		$this->data['suppliers']  = $this->db->where('status', 'aktif')->get('supplier')->result();
 		$this->data['gudangs']    = $this->db->where('status', 'aktif')->get('gudang')->result();
-		$this->data['produks']    = $this->db->where('status', 'aktif')->get('produk')->result();
+		$this->data['produks']    = $this->db->select('produk.*, satuan.nama_satuan, satuan.singkatan')
+			->join('satuan', 'satuan.id = produk.satuan_id', 'LEFT')
+			->where('produk.status', 'aktif')
+			->get('produk')->result();
 		$this->template->title('Buat Purchase Order');
 		$this->render('backend/standart/administrator/purchase_order/purchase_order_add', $this->data);
 	}
@@ -213,7 +216,12 @@ class Purchase_order extends Admin
 
 	public function approve($id)
 	{
-		$this->is_allowed('purchase_order_approve');
+		if (!$this->aauth->is_admin()) {
+			set_message('Wewenang Ditolak: Approval Purchase Order hanya dapat disetujui oleh Administrator / Admin Utama!', 'error');
+			redirect('administrator/purchase_order/view/' . $id);
+			return;
+		}
+
 		$po = $this->model_purchase_order->find($id);
 		if (!$po) {
 			redirect('administrator/purchase_order');
@@ -221,14 +229,7 @@ class Purchase_order extends Admin
 		}
 
 		$total_idr = $po->total * ($po->kurs ?: 1);
-		$threshold = 50000000; // Threshold nominal Rp 50.000.000 untuk approval Level 2 (Manajer/Admin)
-
-		if ($total_idr >= $threshold && !$this->aauth->is_admin()) {
-			set_message('PO dengan nilai nominal di atas Rp 50.000.000 (Nominal: Rp ' . number_format($total_idr, 0, ',', '.') . ') memerlukan wewenang approval dari Administrator / Manajer Utama!', 'error');
-			redirect('administrator/purchase_order/view/' . $id);
-			return;
-		}
-
+		$threshold = (float) get_option('po_approval_threshold', 50000000);
 		$level = ($total_idr >= $threshold) ? 2 : 1;
 
 		$this->db->update('purchase_order', [
@@ -253,9 +254,25 @@ class Purchase_order extends Admin
 		redirect('administrator/purchase_order/view/' . $id);
 	}
 
+	public function save_setting()
+	{
+		$this->is_allowed('purchase_order_update');
+		$threshold_raw = $this->input->post('po_approval_threshold');
+		$threshold = (float) str_replace(['.', ','], '', $threshold_raw);
+		set_option('po_approval_threshold', $threshold);
+
+		set_message('Batas nominal threshold approval PO berhasil diperbarui menjadi Rp ' . number_format($threshold, 0, ',', '.'), 'success');
+		redirect('administrator/purchase_order');
+	}
+
 	public function reject($id)
 	{
-		$this->is_allowed('purchase_order_approve');
+		if (!$this->aauth->is_admin()) {
+			set_message('Wewenang Ditolak: Penolakan Purchase Order hanya dapat dilakukan oleh Administrator / Admin Utama!', 'error');
+			redirect('administrator/purchase_order/view/' . $id);
+			return;
+		}
+
 		$this->db->update('purchase_order', ['status' => 'rejected', 'updated_at' => date('Y-m-d H:i:s')], ['id' => $id]);
 
 		$this->db->insert('approval_log', [
@@ -282,7 +299,10 @@ class Purchase_order extends Admin
 		}
 		$this->data['suppliers']  = $this->db->where('status', 'aktif')->get('supplier')->result();
 		$this->data['gudangs']    = $this->db->where('status', 'aktif')->get('gudang')->result();
-		$this->data['produks']    = $this->db->where('status', 'aktif')->get('produk')->result();
+		$this->data['produks']    = $this->db->select('produk.*, satuan.nama_satuan, satuan.singkatan')
+			->join('satuan', 'satuan.id = produk.satuan_id', 'LEFT')
+			->where('produk.status', 'aktif')
+			->get('produk')->result();
 		$this->data['items']      = $this->model_purchase_order->get_items($id);
 		$this->template->title('Edit Purchase Order');
 		$this->render('backend/standart/administrator/purchase_order/purchase_order_update', $this->data);

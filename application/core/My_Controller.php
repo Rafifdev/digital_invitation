@@ -55,7 +55,7 @@ class MY_Controller extends MX_Controller  {
                if ($this->uri->segment(1) == 'api' || $this->input->is_ajax_request()) {
                     $this->output->enable_profiler(FALSE);
                 } else {
-                    $this->output->enable_profiler(TRUE);
+                    $this->output->enable_profiler(FALSE); // Disabled by request
                 }
             } 
 

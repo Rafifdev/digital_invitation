@@ -77,7 +77,7 @@
             <!-- Profile Banner -->
             <div class="profile-cover">
                <div class="profile-avatar-wrapper">
-                  <img class="profile-avatar-img" src="<?= BASE_URL.'uploads/user/'.(!empty($user->avatar) ? $user->avatar :'default.png'); ?>" alt="User Avatar">
+                  <img class="profile-avatar-img" src="<?= BASE_URL.'uploads/user/'.(!empty($user->avatar) ? $user->avatar :'default.png'); ?>" alt="User Avatar" onerror="this.onerror=null; this.src='<?= BASE_ASSET; ?>admin-lte/dist/img/avatar.png';">
                </div>
                <div class="profile-header-info">
                   <h2 class="profile-title"><?= _ent(ucwords($user->full_name)); ?></h2>

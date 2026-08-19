@@ -1,6 +1,6 @@
 <?php
 /**
- * View: Daftar Sales Order (Modern & Sleek UI)
+ * View: Daftar Sales Order Regular
  * File: sales_order_list.php
  */
 $status_color = [
@@ -64,7 +64,7 @@ $status_display = [
 <section class="content-header">
    <h1>
       Pesanan Penjualan (Sales Order)
-      <small>Daftar Pesanan Masuk & Status Pengiriman Berkala</small>
+      <small>Daftar Pesanan Masuk Regular & Status Pengiriman</small>
    </h1>
    <ol class="breadcrumb">
       <li><a href="<?= site_url('administrator/dashboard'); ?>"><i class="fa fa-dashboard"></i> Home</a></li>
@@ -73,7 +73,7 @@ $status_display = [
 </section>
 
 <section class="content">
-   <!-- 4 Modern Minimalist KPI Cards -->
+   <!-- 4 KPI Cards -->
    <div class="row">
       <div class="col-md-3 col-sm-6">
          <div class="kpi-card">
@@ -118,6 +118,9 @@ $status_display = [
             <div class="box-header with-border" style="padding: 15px 20px;">
                <h3 class="box-title" style="font-weight:600;"><i class="fa fa-list-alt text-primary"></i> Daftar Dokumen Sales Order</h3>
                <div class="box-tools pull-right">
+                  <a href="<?= site_url('administrator/penjualan_marketplace'); ?>" class="btn btn-info btn-sm btn-flat" style="margin-right:5px; border-radius:4px; font-weight:600;">
+                     <i class="fa fa-shopping-bag"></i> Penjualan Register All (Marketplace)
+                  </a>
                   <?php if (is_allowed('pelanggan_list', false)): ?>
                      <a href="<?= site_url('administrator/pelanggan'); ?>" class="btn btn-default btn-sm btn-flat" style="margin-right:5px; border-radius:4px;">
                         <i class="fa fa-users"></i> Data Pelanggan
@@ -231,7 +234,6 @@ $status_display = [
                                  ?>
                               </td>
                               <td class="text-center">
-                                 <!-- Inline Buttons for Better UX (No Dropdown Clipping) -->
                                  <a href="<?= site_url('administrator/sales_order/view/' . $so->id); ?>" class="btn btn-default btn-xs" title="Detail"><i class="fa fa-eye"></i></a>
                                  <a href="<?= site_url('administrator/sales_order/cetak/' . $so->id); ?>" target="_blank" class="btn btn-info btn-xs" title="Cetak PDF"><i class="fa fa-print"></i></a>
                                  

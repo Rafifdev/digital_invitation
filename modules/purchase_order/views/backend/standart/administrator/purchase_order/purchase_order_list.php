@@ -31,13 +31,18 @@ $status_color = [
          <div class="box box-primary" style="border-radius:6px; border-top: 3px solid #3c8dbc;">
             <div class="box-header with-border" style="padding: 15px 20px;">
                <h3 class="box-title" style="font-weight:600;"><i class="fa fa-shopping-cart text-primary"></i> Daftar Seluruh Pesanan Pembelian <span class="label label-warning" style="font-size:11px;"><?= $po_counts; ?> Data</span></h3>
-               <div class="box-tools pull-right">
-                  <?php if (is_allowed('purchase_order_add', false)): ?>
-                     <a href="<?= site_url('administrator/purchase_order/add'); ?>" class="btn btn-success btn-sm btn-flat" style="border-radius:4px; font-weight:600;">
-                        <i class="fa fa-plus-circle"></i> Buat Purchase Order
-                     </a>
-                  <?php endif; ?>
-               </div>
+                <div class="box-tools pull-right">
+                   <?php if (is_allowed('purchase_order_update', false)): ?>
+                      <button type="button" class="btn btn-warning btn-sm btn-flat" data-toggle="modal" data-target="#modal_setting_po" style="border-radius:4px; font-weight:600; margin-right:5px;">
+                         <i class="fa fa-cog"></i> Pengaturan Threshold PO
+                      </button>
+                   <?php endif; ?>
+                   <?php if (is_allowed('purchase_order_add', false)): ?>
+                      <a href="<?= site_url('administrator/purchase_order/add'); ?>" class="btn btn-success btn-sm btn-flat" style="border-radius:4px; font-weight:600;">
+                         <i class="fa fa-plus-circle"></i> Buat Purchase Order
+                      </a>
+                   <?php endif; ?>
+                </div>
             </div>
 
             <div class="box-body" style="padding: 20px;">
@@ -89,6 +94,13 @@ $status_color = [
                                     <span class="label <?= isset($status_color[$po->status]) ? $status_color[$po->status] : 'label-default'; ?>" style="font-size:11px; padding:4px 8px;">
                                        <?= strtoupper($po->status); ?>
                                     </span>
+                                    <?php 
+                                       $po_thresh = (float) get_option('po_approval_threshold', 50000000);
+                                       $po_total_idr = (float)$po->total * (float)($po->kurs ?: 1);
+                                       if ($po->status == 'submitted' && $po_total_idr >= $po_thresh):
+                                    ?>
+                                       <br><span class="label label-danger" style="font-size:9px; margin-top:3px; display:inline-block;" title="Perlu Approval Manajer"><i class="fa fa-shield"></i> HIGH VALUE</span>
+                                    <?php endif; ?>
                                  </td>
                                  <td class="text-center">
                                     <!-- Inline Buttons -->
@@ -169,3 +181,34 @@ $(document).ready(function(){
    });
 });
 </script>
+
+<!-- Modal Pengaturan Threshold PO -->
+<div class="modal fade" id="modal_setting_po" tabindex="-1" role="dialog">
+   <div class="modal-dialog" role="document">
+      <div class="modal-content" style="border-radius:8px;">
+         <form action="<?= site_url('administrator/purchase_order/save_setting'); ?>" method="POST" id="form_setting_po">
+            <div class="modal-header" style="background:#f39c12; color:#fff; border-top-left-radius:8px; border-top-right-radius:8px;">
+               <button type="button" class="close" data-dismiss="modal" style="color:#fff;">&times;</button>
+               <h4 class="modal-title" style="font-weight:700;"><i class="fa fa-cog"></i> Pengaturan Threshold Approval PO</h4>
+            </div>
+            <div class="modal-body" style="padding:20px;">
+               <div class="form-group">
+                  <label>Batas Nominal Threshold Approval Manajer (PO High-Value) <span class="text-danger">*</span></label>
+                  <div class="input-group">
+                     <span class="input-group-addon">Rp</span>
+                     <input type="text" class="form-control rupiah" name="po_approval_threshold" value="<?= number_format((float)get_option('po_approval_threshold', 50000000), 0, ',', '.'); ?>" required style="font-size:16px; font-weight:700; color:#2c3e50;">
+                  </div>
+                  <small class="text-muted" style="display:block; margin-top:8px;">
+                     - <strong>PO &lt; Nominal Threshold:</strong> Cukup persetujuan Level 1 (Supervisor/Staff).<br>
+                     - <strong>PO &ge; Nominal Threshold:</strong> Memerlukan persetujuan bertingkat Level 2 (Manajer/Admin Utama).
+                  </small>
+               </div>
+            </div>
+            <div class="modal-footer" style="background:#f8f9fa; border-bottom-left-radius:8px; border-bottom-right-radius:8px;">
+               <button type="button" class="btn btn-default" data-dismiss="modal">Batal</button>
+               <button type="submit" class="btn btn-warning" style="font-weight:700;"><i class="fa fa-save"></i> Simpan Pengaturan</button>
+            </div>
+         </form>
+      </div>
+   </div>
+</div>

@@ -155,6 +155,12 @@ $action_url = $is_edit
             </div>
          </div>
 
+         <!-- High Value PO Approval Live Alert -->
+         <div id="high_value_po_alert" class="alert alert-warning" style="display:none; margin: 15px 20px 0 20px; border-left: 5px solid #f39c12; background: #fffcf5; color: #8a6d3b; border-radius: 4px;">
+            <i class="fa fa-shield text-warning margin-r-5" style="font-size: 16px;"></i> 
+            <strong>Perhatian Approval Wewenang Direktur:</strong> Total transaksi PO ini sebesar <strong id="alert_total_idr">Rp 0</strong> melebihi batas threshold approval (<strong id="alert_threshold_idr">Rp 50.000.000</strong>). Setelah disubmit, PO ini memerlukan persetujuan dari Direktur / Superadmin.
+         </div>
+
          <!-- Card Footer: Action Buttons at the Bottom! -->
          <div class="box-footer" style="padding:15px 20px; background:#f8fafc; border-top:1px solid #f1f5f9; border-radius: 0 0 8px 8px;">
             <div class="pull-left">
@@ -176,7 +182,7 @@ $action_url = $is_edit
 
 <script>
 var item_count = 1;
-var produks_data = <?= json_encode(array_map(function($p){ return ['id'=>$p->id,'nama'=>$p->kode_produk.' - '.$p->nama_produk,'harga_beli'=>$p->harga_beli]; }, $produks)); ?>;
+var produks_data = <?= json_encode(array_map(function($p){ return ['id'=>$p->id,'nama'=>$p->kode_produk.' - '.$p->nama_produk,'harga_beli'=>$p->harga_beli,'satuan'=>$p->singkatan ?? $p->nama_satuan ?? 'pcs']; }, $produks)); ?>;
 
 var live_kurs_map = {
    'IDR': 1,
@@ -287,6 +293,15 @@ function recalc_total(){
 
    var total_idr = total * kurs;
    $('#display_total_idr').text('Rp ' + Math.round(total_idr).toLocaleString('id-ID'));
+
+   var po_thresh = <?= (float) get_option('po_approval_threshold', 50000000); ?>;
+   if (total_idr >= po_thresh) {
+      $('#alert_total_idr').text('Rp ' + Math.round(total_idr).toLocaleString('id-ID'));
+      $('#alert_threshold_idr').text('Rp ' + Math.round(po_thresh).toLocaleString('id-ID'));
+      $('#high_value_po_alert').slideDown();
+   } else {
+      $('#high_value_po_alert').slideUp();
+   }
 }
 
 function add_item_row(){
@@ -294,8 +309,8 @@ function add_item_row(){
    var curr = $('#mata_uang').val() || 'IDR';
    var rupiah_class = (curr === 'IDR') ? 'rupiah' : '';
    var options = '<option value="">-- Pilih Produk --</option>';
-   produks_data.forEach(function(p){ options += '<option value="'+p.id+'" data-harga-idr="'+p.harga_beli+'">'+p.nama+'</option>'; });
-   var row = '<tr id="item_row_'+idx+'" class="item-row"><td><select class="form-control produk-select" style="width:100%;" name="items['+idx+'][produk_id]">'+options+'</select></td><td><input type="number" step="1" min="1" class="form-control qty-input" name="items['+idx+'][qty]" value="1" min="1" step="1"></td><td><input type="text" class="form-control" name="items['+idx+'][satuan]"></td><td><input type="text" class="form-control harga-input '+rupiah_class+'" name="items['+idx+'][harga_satuan]" value="0"></td><td><input type="text" class="form-control disc-input" name="items['+idx+'][diskon_persen]" value="0"></td><td><input type="text" class="form-control subtotal-display" name="items['+idx+'][subtotal_display]" value="0" readonly></td><td><button type="button" class="btn btn-xs btn-danger remove-row"><i class="fa fa-times"></i></button></td></tr>';
+   produks_data.forEach(function(p){ options += '<option value="'+p.id+'" data-harga-idr="'+p.harga_beli+'" data-satuan="'+p.satuan+'">'+p.nama+'</option>'; });
+   var row = '<tr id="item_row_'+idx+'" class="item-row"><td><select class="form-control produk-select" style="width:100%;" name="items['+idx+'][produk_id]">'+options+'</select></td><td><input type="number" step="1" min="1" class="form-control qty-input" name="items['+idx+'][qty]" value="1" min="1" step="1"></td><td><input type="text" class="form-control satuan-input" name="items['+idx+'][satuan]" readonly placeholder="Unit"></td><td><input type="text" class="form-control harga-input '+rupiah_class+'" name="items['+idx+'][harga_satuan]" value="0"></td><td><input type="text" class="form-control disc-input" name="items['+idx+'][diskon_persen]" value="0"></td><td><input type="text" class="form-control subtotal-display" name="items['+idx+'][subtotal_display]" value="0" readonly></td><td><button type="button" class="btn btn-xs btn-danger remove-row"><i class="fa fa-times"></i></button></td></tr>';
    $('#item_rows').append(row);
    if(typeof $.fn.chosen === 'function'){ $('#item_rows tr:last .chosen').chosen({width:'100%'}); }
 }
