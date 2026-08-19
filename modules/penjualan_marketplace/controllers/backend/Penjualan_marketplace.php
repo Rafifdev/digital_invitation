@@ -43,6 +43,106 @@ class Penjualan_marketplace extends Admin
 		$this->render('backend/standart/administrator/penjualan_marketplace/penjualan_marketplace_view', $this->data);
 	}
 
+	public function add()
+	{
+		$this->is_allowed('sales_order_add');
+		$this->data['gudangs'] = $this->db->get('gudang')->result();
+		$this->data['produks'] = $this->db->get('produk')->result();
+		$this->template->title('Tambah Penjualan Shopee / Online Shop');
+		$this->render('backend/standart/administrator/penjualan_marketplace/penjualan_marketplace_add', $this->data);
+	}
+
+	public function add_save()
+	{
+		$this->is_allowed('sales_order_add');
+
+		$source           = $this->input->post('source') ?: 'shopee';
+		$no_pesanan       = $this->input->post('no_pesanan');
+		$status           = $this->input->post('status') ?: 'packing';
+		$gudang_id        = $this->input->post('gudang_id') ?: 1;
+		$opsi_pengiriman  = $this->input->post('opsi_pengiriman') ?: 'SPX Express Standard';
+		$nomor_resi       = $this->input->post('nomor_resi') ?: ('SPX' . rand(1000000000, 9999999999));
+		$waktu_pembayaran = $this->input->post('waktu_pembayaran') ? date('Y-m-d H:i:s', strtotime($this->input->post('waktu_pembayaran'))) : date('Y-m-d H:i:s');
+		
+		$username_pembeli  = $this->input->post('username_pembeli');
+		$nama_penerima     = $this->input->post('nama_penerima');
+		$no_telepon        = $this->input->post('no_telepon');
+		$alamat_pengiriman = $this->input->post('alamat_pengiriman');
+		$kota_kabupaten    = $this->input->post('kota_kabupaten');
+		$provinsi          = $this->input->post('provinsi');
+		$catatan           = $this->input->post('catatan');
+		$total             = (float) $this->input->post('total');
+
+		$default_pelanggan = $this->db->get_where('pelanggan', ['kode_pelanggan' => 'CUS-MARKETPLACE'])->row() 
+			?: $this->db->get('pelanggan')->row();
+		$pelanggan_id = $default_pelanggan ? $default_pelanggan->id : 1;
+
+		$nomor_so = $this->Model_penjualan_marketplace->generate_nomor();
+
+		$data_pm = [
+			'nomor_so'            => $nomor_so,
+			'no_pesanan'          => $no_pesanan,
+			'source'              => $source,
+			'pelanggan_id'        => $pelanggan_id,
+			'gudang_id'           => $gudang_id,
+			'tanggal_so'          => date('Y-m-d'),
+			'status'              => $status,
+			'status_pesanan'      => strtoupper($status),
+			'nomor_resi'          => $nomor_resi,
+			'kurir_ekspedisi'     => $opsi_pengiriman,
+			'opsi_pengiriman'     => $opsi_pengiriman,
+			'waktu_pembayaran'    => $waktu_pembayaran,
+			'username_pembeli'    => $username_pembeli,
+			'nama_penerima'       => $nama_penerima,
+			'no_telepon'          => $no_telepon,
+			'alamat_pengiriman'   => $alamat_pengiriman,
+			'kota_kabupaten'      => $kota_kabupaten,
+			'provinsi'            => $provinsi,
+			'subtotal'            => $total,
+			'total'               => $total,
+			'catatan'             => $catatan,
+			'created_by'          => get_user_data('username'),
+			'created_at'          => date('Y-m-d H:i:s'),
+		];
+
+		$pm_id = $this->Model_penjualan_marketplace->store($data_pm);
+
+		if ($pm_id) {
+			$produk_ids    = $this->input->post('produk_id');
+			$qtys          = $this->input->post('qty');
+			$hargas        = $this->input->post('harga_satuan');
+			$subtotals     = $this->input->post('subtotal_item');
+
+			if (!empty($produk_ids) && is_array($produk_ids)) {
+				foreach ($produk_ids as $idx => $prod_id) {
+					if (empty($prod_id)) continue;
+					$prod = $this->db->get_where('produk', ['id' => $prod_id])->row();
+					$qty = (float) ($qtys[$idx] ?? 1);
+					$harga = (float) ($hargas[$idx] ?? 0);
+					$subtotal = (float) ($subtotals[$idx] ?? ($qty * $harga));
+
+					$this->db->insert('penjualan_marketplace_item', [
+						'penjualan_marketplace_id' => $pm_id,
+						'produk_id'     => $prod_id,
+						'qty'           => max(1, $qty),
+						'satuan'        => 'pcs',
+						'harga_satuan'  => $harga,
+						'diskon_persen' => 0,
+						'diskon_nominal'=> 0,
+						'subtotal'      => $subtotal,
+						'catatan'       => $prod ? $prod->nama_produk : '',
+					]);
+				}
+			}
+
+			set_message("Berhasil menambahkan pesanan Online Shop baru (#{$no_pesanan})!", 'success');
+		} else {
+			set_message("Gagal menambahkan pesanan Online Shop baru.", 'error');
+		}
+
+		redirect('administrator/penjualan_marketplace');
+	}
+
 	public function download_template_shopee()
 	{
 		$headers = [

@@ -132,8 +132,8 @@ $status_display = [
                   <button type="button" class="btn btn-success btn-flat btn-sm btn-marketplace-action" data-toggle="modal" data-target="#modalImportMarketplace">
                      <i class="fa fa-plus"></i> Add Import Penjualan (Tokopedia/Shopee) New
                   </button>
-                  <a href="<?= site_url('administrator/sales_order/add?source=shopee'); ?>" class="btn btn-success btn-flat btn-sm btn-marketplace-action">
-                     <i class="fa fa-plus"></i> Add Penjualan Shopee New
+                  <a href="<?= site_url('administrator/penjualan_marketplace/add'); ?>" class="btn btn-success btn-flat btn-sm btn-marketplace-action">
+                     <i class="fa fa-plus"></i> + Add Penjualan Shopee New
                   </a>
                   <a href="<?= site_url('administrator/penjualan_marketplace/export'); ?>" class="btn btn-success btn-flat btn-sm btn-marketplace-action">
                      <i class="fa fa-file-excel-o"></i> Export XLS
