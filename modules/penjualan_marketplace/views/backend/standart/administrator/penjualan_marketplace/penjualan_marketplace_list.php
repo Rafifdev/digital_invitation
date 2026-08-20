@@ -259,7 +259,7 @@ $status_display = [
                               <td class="text-center"><span class="text-muted">-</span></td>
                               <td class="text-center">
                                  <a href="<?= site_url('administrator/penjualan_marketplace/view/' . $so->id); ?>" class="btn btn-default btn-xs" title="Lihat Detail"><i class="fa fa-eye"></i></a>
-                                 <a href="<?= site_url('administrator/penjualan_marketplace/export_pdf'); ?>" target="_blank" class="btn btn-info btn-xs" title="Cetak PDF"><i class="fa fa-print"></i></a>
+                                 <a href="<?= site_url('administrator/penjualan_marketplace/cetak_resi/' . $so->id); ?>" target="_blank" class="btn btn-info btn-xs" title="Cetak Label Resi Thermal AWB"><i class="fa fa-print"></i></a>
                               </td>
                            </tr>
                            <?php endforeach; ?>

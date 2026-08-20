@@ -35,7 +35,7 @@ $st_display = !empty($so->status_pesanan) ? strtoupper($so->status_pesanan) : st
                <span class="label label-<?= $status_color[$so->status]??'primary'; ?>" style="font-size:11px; padding:5px 9px;"><?= _ent($st_display); ?></span>
             </h3>
             <div class="box-tools pull-right">
-               <a href="<?= site_url('administrator/penjualan_marketplace/export_pdf'); ?>" target="_blank" class="btn btn-info btn-sm btn-flat" style="border-radius:4px;"><i class="fa fa-print"></i> Cetak Label / PDF</a> 
+               <a href="<?= site_url('administrator/penjualan_marketplace/cetak_resi/' . $so->id); ?>" target="_blank" class="btn btn-info btn-sm btn-flat" style="border-radius:4px;"><i class="fa fa-print"></i> Cetak Label Resi Thermal AWB</a> 
                <a href="<?= base_url('administrator/penjualan_marketplace'); ?>" class="btn btn-default btn-sm btn-flat" style="border-radius:4px;"><i class="fa fa-arrow-left"></i> Kembali ke Register All</a>
             </div>
          </div>

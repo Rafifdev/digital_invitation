@@ -43,6 +43,14 @@ class Penjualan_marketplace extends Admin
 		$this->render('backend/standart/administrator/penjualan_marketplace/penjualan_marketplace_view', $this->data);
 	}
 
+	public function cetak_resi($id)
+	{
+		$this->is_allowed('sales_order_view');
+		$this->data['so']    = $this->Model_penjualan_marketplace->find_with_detail($id);
+		$this->data['items'] = $this->Model_penjualan_marketplace->get_items($id);
+		$this->load->view('backend/standart/administrator/penjualan_marketplace/penjualan_marketplace_resi', $this->data);
+	}
+
 	public function add()
 	{
 		$this->is_allowed('sales_order_add');
@@ -57,12 +65,22 @@ class Penjualan_marketplace extends Admin
 		$this->is_allowed('sales_order_add');
 
 		$source           = $this->input->post('source') ?: 'shopee';
-		$no_pesanan       = $this->input->post('no_pesanan');
+		$no_pesanan       = trim($this->input->post('no_pesanan'));
 		$status           = $this->input->post('status') ?: 'packing';
 		$gudang_id        = $this->input->post('gudang_id') ?: 1;
 		$opsi_pengiriman  = $this->input->post('opsi_pengiriman') ?: 'SPX Express Standard';
 		$nomor_resi       = $this->input->post('nomor_resi') ?: ('SPX' . rand(1000000000, 9999999999));
 		$waktu_pembayaran = $this->input->post('waktu_pembayaran') ? date('Y-m-d H:i:s', strtotime($this->input->post('waktu_pembayaran'))) : date('Y-m-d H:i:s');
+		
+		// Duplicate Check
+		if (!empty($no_pesanan)) {
+			$existing = $this->db->get_where('penjualan_marketplace', ['no_pesanan' => $no_pesanan])->row();
+			if ($existing) {
+				set_message("Gagal menyimpan! Nomor Pesanan '{$no_pesanan}' sudah ada di database (Duplikat).", 'error');
+				redirect('administrator/penjualan_marketplace/add');
+				return;
+			}
+		}
 		
 		$username_pembeli  = $this->input->post('username_pembeli');
 		$nama_penerima     = $this->input->post('nama_penerima');
