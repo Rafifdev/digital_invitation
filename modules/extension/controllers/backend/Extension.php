@@ -2,13 +2,7 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 
-/**
-*| --------------------------------------------------------------------------
-*| Extension Controller
-*| --------------------------------------------------------------------------
-*| Extension site
-*|
-*/
+// Init section
 class Extension extends Admin	
 {
 	

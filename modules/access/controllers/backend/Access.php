@@ -2,13 +2,7 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 
-/**
-*| --------------------------------------------------------------------------
-*| Access Controller
-*| --------------------------------------------------------------------------
-*| access site
-*|
-*/
+// Init section
 class Access extends Admin	
 {
 	
@@ -129,7 +123,7 @@ class Access extends Admin
                     <?php foreach($childs as $perms) { ?>
                     <li>
                         <label>
-                            <input type="checkbox" class="flat-red check <?= $group_name; ?>" name="id[]" value="<?= $perms->id; ?>" <?= array_search($perms->id, $group_perms) ? 'checked' : ''; ?>>
+                            <input type="checkbox" class="flat-red check <?= $group_name; ?>" name="id[]" value="<?= $perms->id; ?>" <?= in_array($perms->id, (array)$group_perms) ? 'checked' : ''; ?>>
                             <?= _ent(ucwords(clean_snake_case($perms->name))); ?>
                         </label>
                     </li>
@@ -143,8 +137,4 @@ class Access extends Admin
         }
     }
 	
-}
-
-
-/* End of file Access.php */
-/* Location: ./application/controllers/administrator/Access.php */
+}

@@ -52,10 +52,10 @@ class MY_Controller extends MX_Controller  {
             $this->load->library(['aauth', 'cc_html', 'cc_page_element', 'cc_app', 'cc_extension']);
 
             if (ENVIRONMENT != 'production') {
-               if ($this->uri->segment(1) == 'api') {
+               if ($this->uri->segment(1) == 'api' || $this->input->is_ajax_request()) {
                     $this->output->enable_profiler(FALSE);
                 } else {
-                    $this->output->enable_profiler(TRUE);
+                    $this->output->enable_profiler(FALSE); // Disabled by request
                 }
             } 
 
@@ -72,13 +72,15 @@ class MY_Controller extends MX_Controller  {
     */
     public function response($data, $status = 200)
     {
-        header('Content-type:application/json');
-        die(json_encode($data));
-
-        $this->output
-            ->set_content_type('application/json')
-            ->set_status_header($status)
-            ->set_output(json_encode($data));
+        if (isset($this->output)) {
+            $this->output->enable_profiler(FALSE);
+        }
+        if (ob_get_length()) {
+            @ob_clean();
+        }
+        header('Content-Type: application/json; charset=utf-8');
+        echo json_encode($data);
+        exit;
     }
 
     /**
@@ -527,7 +529,9 @@ class Admin extends MY_Controller
                 if ($redirect) {
                     $this->session->set_flashdata('f_message', 'Sorry you do not have permission to access ');
                     $this->session->set_flashdata('f_type', 'warning');
-                    redirect('administrator/dashboard','refresh');
+                    if ($this->uri->segment(2) !== 'dashboard' && $this->aauth->is_allowed('dashboard')) {
+                        redirect('administrator/dashboard','refresh');
+                    }
                 }
                 return false;
             }

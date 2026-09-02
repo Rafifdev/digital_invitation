@@ -1,13 +1,7 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
-/**
- *| --------------------------------------------------------------------------
- *| Keys Controller
- *| --------------------------------------------------------------------------
- *| Keys site
- *|
- */
+// Init section
 class Keys extends Admin
 {
 

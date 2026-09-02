@@ -1,18 +1,66 @@
 <?php
 
+if(!function_exists('terbilang')) {
+	function terbilang($nilai) {
+		$nilai = abs((float)$nilai);
+		$huruf = array("", "satu", "dua", "tiga", "empat", "lima", "enam", "tujuh", "delapan", "sembilan", "sepuluh", "sebelas");
+		$temp = "";
+		if ($nilai < 12) {
+			$temp = " " . $huruf[(int)$nilai];
+		} else if ($nilai < 20) {
+			$temp = terbilang($nilai - 10) . " belas";
+		} else if ($nilai < 100) {
+			$temp = terbilang((int)($nilai / 10)) . " puluh" . terbilang((int)$nilai % 10);
+		} else if ($nilai < 200) {
+			$temp = " seratus" . terbilang($nilai - 100);
+		} else if ($nilai < 1000) {
+			$temp = terbilang((int)($nilai / 100)) . " ratus" . terbilang((int)$nilai % 100);
+		} else if ($nilai < 2000) {
+			$temp = " seribu" . terbilang($nilai - 1000);
+		} else if ($nilai < 1000000) {
+			$temp = terbilang((int)($nilai / 1000)) . " ribu" . terbilang((int)$nilai % 1000);
+		} else if ($nilai < 1000000000) {
+			$temp = terbilang((int)($nilai / 1000000)) . " juta" . terbilang((int)$nilai % 1000000);
+		} else if ($nilai < 1000000000000) {
+			$temp = terbilang((int)($nilai / 1000000000)) . " milyar" . terbilang(fmod($nilai, 1000000000));
+		} else if ($nilai < 1000000000000000) {
+			$temp = terbilang((int)($nilai / 1000000000000)) . " trilyun" . terbilang(fmod($nilai, 1000000000000));
+		}
+		return $temp;
+	}
+}
+
+if(!function_exists('get_live_exchange_rate')) {
+	function get_live_exchange_rate($currency = 'USD') {
+		$currency = strtoupper($currency);
+		if ($currency == 'IDR') return 1.0;
+		$url = "https://open.er-api.com/v6/latest/" . $currency;
+		$json = @file_get_contents($url);
+		if ($json) {
+			$data = json_decode($json, true);
+			if (isset($data['rates']['IDR'])) {
+				return (float) $data['rates']['IDR'];
+			}
+		}
+		return 1.0;
+	}
+}
+
 if(!function_exists('get_mysql_version')) {
 	function get_mysql_version() {
-		$mysql_info = explode(' ', mysqli_get_client_info());
-		$mysql_version = isset($mysql_info[1]) ? $mysql_info[1] : false;
-		$mysql_version_number = explode('-', $mysql_version)[0];
-
-		if ($mysql_version_number) {
-			return $mysql_version_number;
-		} else if (isset($mysql_info[0])) {
-			return (int)substr($mysql_info[0], 0, 3);
+		$ci = &get_instance();
+		if (isset($ci->db) && method_exists($ci->db, 'version')) {
+			return $ci->db->version();
 		}
-
-		return 5;
+		if (function_exists('mysqli_get_client_info')) {
+			$mysql_info = explode(' ', mysqli_get_client_info());
+			$mysql_version = isset($mysql_info[1]) ? $mysql_info[1] : false;
+			$mysql_version_number = explode('-', $mysql_version)[0];
+			if ($mysql_version_number) {
+				return $mysql_version_number;
+			}
+		}
+		return '8.0';
 	}
 }
 
@@ -89,10 +137,13 @@ if(!function_exists('get_user_data')) {
 		$ci =& get_instance();
 		$user_id = $ci->session->userdata('id');
 		if ($user_id) {
-			if (empty($field_name)) {
-				return $ci->aauth->get_user($user_id);
-			} else {
-				return $ci->aauth->get_user($user_id)->$field_name;
+			$user = $ci->aauth->get_user($user_id);
+			if ($user && is_object($user)) {
+				if (empty($field_name)) {
+					return $user;
+				} else {
+					return isset($user->{$field_name}) ? $user->{$field_name} : false;
+				}
 			}
 		}
 
@@ -101,11 +152,18 @@ if(!function_exists('get_user_data')) {
 }
 
 if(!function_exists('is_allowed')) {
-	function is_allowed($permission, Closure $func) {
+	function is_allowed($permission, $func = null) {
 		$ci =& get_instance();
+
+		// If called with a boolean or without second argument: just return true/false
+		// Usage in views: if (is_allowed('permission_name', false)): or if (is_allowed('permission_name')):
+		if (!($func instanceof Closure)) {
+			return $ci->aauth->is_allowed($permission);
+		}
+
+		// Legacy usage with Closure callback
 		$reflection = new ReflectionFunction($func);
 		$arguments  = $reflection->getParameters();
-
 
 		if ($ci->aauth->is_allowed($permission)) {
 			call_user_func($func, $arguments);
@@ -114,7 +172,6 @@ if(!function_exists('is_allowed')) {
 			call_user_func($func, $arguments);
 			$buffer = ob_get_contents();
 			ob_end_clean();
-
 		}
 	}
 }
@@ -403,6 +460,11 @@ if(!function_exists('get_captcha')) {
 		$ci =& get_instance();
 		$ci->load->helper('captcha');
 
+		$captcha_dir = FCPATH . 'captcha/';
+		if (!is_dir($captcha_dir)) {
+			mkdir($captcha_dir, 0777, true);
+		}
+
 		$vals = array(
 		        'img_path'      => './captcha/',
 		        'img_url'       => base_url('/captcha/'),
@@ -429,16 +491,16 @@ if(!function_exists('get_captcha')) {
 		$ci->db->where('captcha_time < ', $expiration)
 		        ->delete('captcha');
 
+		if (is_array($cap) && isset($cap['time'], $cap['word'])) {
+			$data = array(
+			        'captcha_time'  => $cap['time'],
+			        'ip_address'    => $ci->input->ip_address(),
+			        'word'          => $cap['word']
+			);
 
-		$data = array(
-		        'captcha_time'  => $cap['time'],
-		        'ip_address'    => $ci->input->ip_address(),
-		        'word'          => $cap['word']
-		);
-
-		$query = $ci->db->insert_string('captcha', $data);
-		$ci->db->query($query);
-
+			$query = $ci->db->insert_string('captcha', $data);
+			$ci->db->query($query);
+		}
 
 		return $cap;
 	}
@@ -1208,12 +1270,16 @@ if(!function_exists('is_dir_empty')) {
 if(!function_exists('get_user_first_group')) {
 	function get_user_first_group($user_id = null) {
 		app()->load->library('aauth');
-		foreach (app()->aauth->get_user_groups($user_id) as $row) {
-			if (strtolower($row->name) != 'default') {
-				return $row;
+		$groups = app()->aauth->get_user_groups($user_id);
+		if (is_array($groups) && count($groups)) {
+			foreach ($groups as $row) {
+				if (strtolower($row->name) != 'default') {
+					return $row;
+				}
 			}
-		} 
+			return $groups[0];
+		}
 
-		return false;
+		return (object)['name' => 'User', 'id' => 0, 'definition' => 'User'];
 	}
 }

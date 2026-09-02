@@ -1,13 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-/**
-*| --------------------------------------------------------------------------
-*| Menu type Controller
-*| --------------------------------------------------------------------------
-*| menu_type site
-*|
-*/
+// Init section
 class Menu_type extends Admin	
 {
 	

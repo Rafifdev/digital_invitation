@@ -1,3 +1,19 @@
+function show_alert(message, type) {
+    var alertType = type || 'info';
+    if (alertType === 'error') alertType = 'warning';
+    if (typeof toastr !== 'undefined' && typeof toastr[alertType] === 'function') {
+        toastr[alertType](message);
+    } else if (typeof swal === 'function') {
+        swal('Pemberitahuan', message, alertType);
+    } else {
+        alert(message);
+    }
+}
+
+function set_notif_message(message, type) {
+    show_alert(message, type);
+}
+
 function showPopup(url, callback) {
     if (url == false) {
       $('#modalPopUp').modal('hide')
@@ -286,4 +302,44 @@ jQuery.expr[':'].regex = function(elem, index, match) {
       });
 
 
-  });;
+  });
+
+/* Hardware / USB Barcode Scanner Auto-Detection Listener */
+(function() {
+    var barcodeBuffer = '';
+    var lastKeyTime = 0;
+
+    $(document).on('keypress', function(e) {
+        // If typing inside an input/textarea, do not capture unless specified
+        if ($(e.target).is('input[type="text"], textarea') && !$(e.target).hasClass('barcode-input')) {
+            return;
+        }
+
+        var currentTime = new Date().getTime();
+        if (currentTime - lastKeyTime > 100) {
+            barcodeBuffer = '';
+        }
+        lastKeyTime = currentTime;
+
+        if (e.which === 13) {
+            if (barcodeBuffer.length >= 3) {
+                e.preventDefault();
+                var code = barcodeBuffer.trim();
+                console.log('Barcode Scanned:', code);
+                $(document).trigger('barcodeScanned', [code]);
+
+                var $target = $('.barcode-input:focus, .produk-select:last');
+                if ($target.length) {
+                    $target.find('option').each(function() {
+                        if ($(this).text().indexOf(code) !== -1 || $(this).val() == code) {
+                            $target.val($(this).val()).trigger('change').trigger('chosen:updated');
+                        }
+                    });
+                }
+            }
+            barcodeBuffer = '';
+        } else {
+            barcodeBuffer += String.fromCharCode(e.which);
+        }
+    });
+})();

@@ -926,7 +926,7 @@ i.required, span.required {
 .sidebar-menu li.header, .sidebar-menu, .sidebar {
     margin-top: 0px !important;
 }
-.page-content, {
+.page-content {
     -webkit-transition: right 1s ease-in-out;
     -o-transition: right 1s ease-in-out;
     transition: right 1s ease-in-out;
@@ -1208,7 +1208,7 @@ div.phpdebugbar-header, .phpdebugbar-restore-btn {
     padding: 15px 10px;
     background: #FFFFFF;
     color: #5C5A5A !important;
-    margin-bottom: : 10px;
+    margin-bottom: 10px;
     cursor: pointer;
     border: 1px solid #ECECEC;
     width: 90%;
@@ -1219,7 +1219,7 @@ div.phpdebugbar-header, .phpdebugbar-restore-btn {
     padding: 15px 10px;
     background: #FFFFFF;
     color: rgb(255, 152, 0) !important;
-    margin-bottom: : 10px;
+    margin-bottom: 10px;
     border: 1px solid #ECECEC;
     width: 10%;
     float: left;
@@ -1311,8 +1311,7 @@ div.phpdebugbar-header, .phpdebugbar-restore-btn {
 
 }*/
 
-.upload-module-container {
-}
+
 
 .upload-module-input-file-container {
     background: #fff; 
@@ -1345,3 +1344,126 @@ div.phpdebugbar-header, .phpdebugbar-restore-btn {
 .chosen-container {
     width: 100% !important;
 }
+
+/* Fix AdminLTE Sidebar & Layout Height */
+html, body {
+    min-height: 100% !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+}
+
+body.fixed .main-header {
+    position: fixed !important;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1030;
+}
+
+body.fixed .main-sidebar {
+    position: fixed !important;
+    top: 0 !important;
+    bottom: 0 !important;
+    height: 100vh !important;
+    overflow-y: auto !important;
+    z-index: 810;
+}
+
+body.fixed .wrapper {
+    overflow: visible !important;
+    height: auto !important;
+    min-height: 100% !important;
+}
+
+body.fixed .content-wrapper {
+    min-height: calc(100vh - 50px) !important;
+    height: auto !important;
+    overflow-y: visible !important;
+}
+
+
+/* Universal Mobile & Desktop Layout Responsiveness */
+.table-wrapper,
+.table-responsive {
+    width: 100% !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    margin-bottom: 15px;
+}
+
+#diagnosis_list {
+    min-width: 750px;
+}
+
+@media (max-width: 767px) {
+    .content-header > h1 {
+        font-size: 20px !important;
+    }
+    
+    .content-header > .breadcrumb {
+        position: relative !important;
+        top: 0 !important;
+        right: 0 !important;
+        float: none !important;
+        margin-top: 8px !important;
+        margin-bottom: 12px !important;
+        background: rgba(0, 0, 0, 0.05) !important;
+        padding: 6px 10px !important;
+        border-radius: 4px;
+    }
+    
+    .box-body {
+        padding: 12px !important;
+    }
+    
+    .btn-action {
+        margin-bottom: 5px;
+    }
+}
+
+/* Global Layout & Responsive Polish */
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+.box {
+    border-radius: 8px !important;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05) !important;
+    border: 1px solid #e2e8f0;
+}
+
+.box-header {
+    border-radius: 8px 8px 0 0 !important;
+}
+
+.form-control {
+    border-radius: 6px;
+    transition: all 0.2s ease-in-out;
+}
+
+.form-control:focus {
+    border-color: #3b82f6 !important;
+    box-shadow: 0 0 0 3px rgba(59,130,246,0.15) !important;
+}
+
+.btn {
+    border-radius: 6px;
+    font-weight: 500;
+    transition: all 0.2s ease-in-out;
+}
+
+.btn:hover {
+    transform: translateY(-1px);
+}
+
+.table > thead > tr > th {
+    font-weight: 600;
+    vertical-align: middle;
+}
+
+.table > tbody > tr > td {
+    vertical-align: middle;
+}
+
+

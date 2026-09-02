@@ -1608,7 +1608,6 @@ class Aauth {
 		$this->CI->load->helper('url');
 
 		if ($this->CI->cc_app->eventListen('auth_allowed_permission', [$perm_par]) === false) {
-		var_dump($this->CI->cc_app->eventListen('auth_allowed_permission', [$perm_par])); exit();
 			return false;
 		}
 
@@ -1628,6 +1627,10 @@ class Aauth {
 
 		$perm_id = $this->get_perm_id($perm_par);
 		
+		if ($perm_id === FALSE) {
+			return FALSE;
+		}
+
 		$query = $this->aauth_db->where('perm_id', $perm_id);
 		$query = $this->aauth_db->where('user_id', $user_id);
 		$query = $this->aauth_db->get( $this->config_vars['perm_to_user'] );
@@ -1659,6 +1662,10 @@ class Aauth {
 	public function is_group_allowed($perm_par, $group_par=FALSE){
 
 		$perm_id = $this->get_perm_id($perm_par);
+
+		if ($perm_id === FALSE) {
+			return FALSE;
+		}
 
 		// if group par is given
 		if($group_par != FALSE){

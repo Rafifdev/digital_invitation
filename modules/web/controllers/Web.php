@@ -1,13 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-/**
-*| --------------------------------------------------------------------------
-*| Web Controller
-*| --------------------------------------------------------------------------
-*| For default controller
-*|
-*/
+// Init section
 class Web extends Front
 {
 	

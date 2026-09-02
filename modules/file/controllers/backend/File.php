@@ -2,13 +2,7 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 
-/**
-*| --------------------------------------------------------------------------
-*| File Controller
-*| --------------------------------------------------------------------------
-*| user site
-*|
-*/
+// Init section
 class File extends Admin	
 {
 	
