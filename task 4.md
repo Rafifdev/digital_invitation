@@ -1,5 +1,3 @@
-<!-- Catatan: File ini direkonstruksi sebagian dari riwayat log setelah terhapus, sehingga ada beberapa baris yang tidak lengkap -->
-
 ... [bagian awal hilang] ...
 
 | 1 – 15 Menit | 0% (Batas toleransi / Aman) |

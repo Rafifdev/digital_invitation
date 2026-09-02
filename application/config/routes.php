@@ -79,7 +79,9 @@ $route[ADMIN_NAMESPACE_URL.'/(:any)/(:any)/(:any)/(:any)'] = '$1/backend/$1/$2/$
 
 
 $route['api/user/(:any)'] = 'api/user/$1';
-$route['api/group/(:any)'] = 'api/group/$1';
+$route[ADMIN_NAMESPACE_URL.'/tb_marketplace_orders'] = 'penjualan_marketplace/backend/penjualan_marketplace';
+$route[ADMIN_NAMESPACE_URL.'/tb_marketplace_orders/(:any)'] = 'penjualan_marketplace/backend/penjualan_marketplace/$1';
+$route[ADMIN_NAMESPACE_URL.'/tb_marketplace_orders/(:any)/(:any)'] = 'penjualan_marketplace/backend/penjualan_marketplace/$1/$2';
 
 $route[ADMIN_NAMESPACE_URL.'/tb_debts'] = 'utang_usaha/backend/utang_usaha';
 $route[ADMIN_NAMESPACE_URL.'/tb_debts/(:any)'] = 'utang_usaha/backend/utang_usaha/$1';

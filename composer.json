@@ -15,12 +15,18 @@
 		"tan5en5/codeigniter-debugbar": "dev-master",
 		"compwright/codeigniter-installers": "*",
         "maximebf/debugbar": ">=1.0.0",
-		"filp/whoops": "^2.1"
+		"filp/whoops": "^2.1",
+		"smalot/pdfparser": "^0.16.2"
 	},
 	"suggest": {
 		"paragonie/random_compat": "Provides better randomness in PHP 5.x"
 	},
 	"require-dev": {
 		"mikey179/vfsstream": "1.1.*"
+	},
+	"config": {
+		"allow-plugins": {
+			"compwright/codeigniter-installers": true
+		}
 	}
 }

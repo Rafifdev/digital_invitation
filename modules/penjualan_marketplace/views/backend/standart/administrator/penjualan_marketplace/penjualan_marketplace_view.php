@@ -1,4 +1,33 @@
 <?php /* penjualan_marketplace_view.php */
+if (!function_exists('mask_nama_penerima')) {
+    function mask_nama_penerima($name) {
+        if (empty($name) || $name == '-') return '-';
+        $words = explode(' ', trim($name));
+        $masked_words = [];
+        foreach ($words as $w) {
+            $len = strlen($w);
+            if ($len <= 2) {
+                $masked_words[] = $w;
+            } else {
+                $first = substr($w, 0, 1);
+                $last  = substr($w, -1);
+                $masked_words[] = $first . '***' . $last;
+            }
+        }
+        return implode(' ', $masked_words);
+    }
+}
+
+if (!function_exists('mask_notelp')) {
+    function mask_notelp($phone) {
+        $clean = preg_replace('/[^0-9]/', '', trim($phone));
+        if (empty($clean) || strlen($clean) < 6) return '08**********';
+        $start = substr($clean, 0, 4);
+        $end   = substr($clean, -2);
+        return $start . '****' . $end;
+    }
+}
+
 $status_color = [
     'draft'      => 'default',
     'packing'    => 'warning',
@@ -59,11 +88,17 @@ $st_display = !empty($so->status_pesanan) ? strtoupper($so->status_pesanan) : st
                            </tr>
                            <tr>
                               <th style="color:#64748b;">Nama Penerima:</th>
-                              <td><strong style="color:#1e293b; font-size:14px;"><?= _ent($so->nama_penerima ?: 'Penerima Paket'); ?></strong></td>
+                              <td>
+                                 <strong id="disp_nama_penerima" style="color:#1e293b; font-size:14px;"><?= _ent(mask_nama_penerima($so->nama_penerima)); ?></strong>
+                                 <button type="button" class="btn btn-default btn-xs" style="border-radius:12px; font-size:10px; padding:2px 8px; margin-left:6px; font-weight:700;" onclick="var el=$('#disp_nama_penerima'); if(el.text() === '<?= _ent(addslashes(mask_nama_penerima($so->nama_penerima))); ?>'){ el.text('<?= _ent(addslashes($so->nama_penerima)); ?>'); $(this).text('🔒 Sensor'); } else { el.text('<?= _ent(addslashes(mask_nama_penerima($so->nama_penerima))); ?>'); $(this).text('👁️ Buka Sensor'); }">👁️ Buka Sensor</button>
+                              </td>
                            </tr>
                            <tr>
                               <th style="color:#64748b;">No. Telepon / WA:</th>
-                              <td><strong style="color:#16a34a;"><i class="fa fa-phone"></i> <?= _ent($so->no_telepon ?: '-'); ?></strong></td>
+                              <td>
+                                 <strong id="disp_no_telepon" style="color:#16a34a;"><i class="fa fa-phone"></i> <?= _ent(mask_notelp($so->no_telepon)); ?></strong>
+                                 <button type="button" class="btn btn-default btn-xs" style="border-radius:12px; font-size:10px; padding:2px 8px; margin-left:6px; font-weight:700;" onclick="var el=$('#disp_no_telepon'); if(el.text().indexOf('****') !== -1){ el.html('<i class=\'fa fa-phone\'></i> <?= _ent(addslashes($so->no_telepon)); ?>'); $(this).text('🔒 Sensor'); } else { el.html('<i class=\'fa fa-phone\'></i> <?= _ent(addslashes(mask_notelp($so->no_telepon))); ?>'); $(this).text('👁️ Buka Sensor'); }">👁️ Buka Sensor</button>
+                              </td>
                            </tr>
                            <tr>
                               <th style="color:#64748b;">Alamat Pengiriman:</th>

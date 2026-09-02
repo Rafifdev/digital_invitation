@@ -620,7 +620,15 @@ class Sales_order extends Admin
 
 		fclose($handle);
 
-		set_message("Berhasil mengimport {$success_count} pesanan Shopee. ({$skipped_count} pesanan dilewati karena duplikat).", 'success');
+		if ($success_count == 0 && $skipped_count > 0) {
+			set_message("Gagal Import! Data pesanan sudah ada di sistem dan tidak bisa dimasukkan lagi ({$skipped_count} pesanan duplikat ditolak).", 'error');
+		} elseif ($success_count > 0 && $skipped_count > 0) {
+			set_message("Berhasil mengimport {$success_count} pesanan baru. Peringatan: {$skipped_count} pesanan dilewati karena sudah ada di database (Duplikat).", 'warning');
+		} elseif ($success_count > 0) {
+			set_message("Berhasil mengimport {$success_count} pesanan Shopee baru.", 'success');
+		} else {
+			set_message("Tidak ada data pesanan baru yang diimport.", 'warning');
+		}
 		redirect('administrator/sales_order');
 	}
 
@@ -766,7 +774,15 @@ class Sales_order extends Admin
 
 		fclose($handle);
 
-		set_message("Berhasil mengimport {$success_count} pesanan Tokopedia. ({$skipped_count} pesanan dilewati karena duplikat).", 'success');
+		if ($success_count == 0 && $skipped_count > 0) {
+			set_message("Gagal Import! Data pesanan sudah ada di sistem dan tidak bisa dimasukkan lagi ({$skipped_count} pesanan duplikat ditolak).", 'error');
+		} elseif ($success_count > 0 && $skipped_count > 0) {
+			set_message("Berhasil mengimport {$success_count} pesanan baru. Peringatan: {$skipped_count} pesanan dilewati karena sudah ada di database (Duplikat).", 'warning');
+		} elseif ($success_count > 0) {
+			set_message("Berhasil mengimport {$success_count} pesanan Tokopedia baru.", 'success');
+		} else {
+			set_message("Tidak ada data pesanan baru yang diimport.", 'warning');
+		}
 		redirect('administrator/sales_order');
 	}
 }
