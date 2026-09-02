@@ -145,6 +145,41 @@
   font-size: 11px;
   font-weight: 600;
 }
+
+/* Mobile Responsiveness & Fluid Layout */
+@media (max-width: 767px) {
+  .crm-dash-header {
+    padding: 20px 18px;
+    text-align: center;
+  }
+  .crm-dash-header h2 {
+    font-size: 20px;
+  }
+  .crm-dash-header .text-right {
+    text-align: center !important;
+    margin-top: 15px;
+  }
+  .kpi-card {
+    padding: 15px;
+    margin-bottom: 12px;
+  }
+  .kpi-card .kpi-value {
+    font-size: 20px;
+  }
+  .kpi-card .kpi-label {
+    font-size: 10px;
+  }
+  .chart-box {
+    padding: 15px;
+    margin-bottom: 15px;
+  }
+  .chart-box .chart-title {
+    font-size: 14px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
+}
 </style>
 
 <section class="content-header">

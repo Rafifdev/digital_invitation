@@ -37,6 +37,15 @@
 .trx-detail-panel { display: none; background: #fafbfc; border-top: 2px solid #3498db; }
 .table-crm th { background: #f8f9fa; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; color: #6c757d; }
 .table-crm td { font-size: 13px; vertical-align: middle !important; }
+
+@media (max-width: 767px) {
+  .profile-header { padding: 20px 15px; text-align: center; }
+  .profile-header .name { font-size: 20px; }
+  .profile-header .text-right { text-align: center !important; margin-top: 15px; }
+  .summary-card { padding: 12px; margin-bottom: 10px; }
+  .summary-card .num { font-size: 22px; }
+  .summary-card .lbl { font-size: 10px; }
+}
 </style>
 
 <section class="content-header">

@@ -12,6 +12,14 @@
 .cat-card .cat-template { background: #f8f9fa; padding: 10px 14px; border-radius: 6px; margin-top: 10px; font-size: 12px; color: #555; white-space: pre-wrap; word-wrap: break-word; max-height: 120px; overflow-y: auto; }
 .var-tag { display: inline-block; background: #dfe6e9; color: #2c3e50; padding: 1px 8px; border-radius: 3px; font-size: 11px; font-family: monospace; margin: 2px; cursor: pointer; }
 .var-tag:hover { background: #3498db; color: #fff; }
+
+@media (max-width: 767px) {
+  .crm-header { padding: 18px 15px; text-align: center; }
+  .crm-header h2 { font-size: 18px; }
+  .crm-header .text-right { text-align: center !important; margin-top: 15px; }
+  .cat-card { padding: 15px; margin-bottom: 12px; }
+  .cat-card .cat-title { font-size: 14px; }
+}
 </style>
 
 <section class="content-header">

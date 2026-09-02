@@ -10,6 +10,12 @@
 .badge-shopee { background: #ee4d2d; }
 .badge-tokopedia { background: #42b549; }
 .badge-tiktok { background: #010101; }
+
+@media (max-width: 767px) {
+  .crm-header { padding: 18px 15px; text-align: center; }
+  .crm-header h2 { font-size: 18px; }
+  .crm-header .text-right { text-align: center !important; margin-top: 15px; }
+}
 </style>
 
 <section class="content-header">

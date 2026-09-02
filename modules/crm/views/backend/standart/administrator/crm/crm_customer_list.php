@@ -16,6 +16,13 @@
 .pending-badge { background: #e74c3c; color: #fff; padding: 2px 8px; border-radius: 10px; font-size: 11px; font-weight: 600; }
 .btn-wa { background: #25D366; color: #fff; border: none; padding: 4px 12px; border-radius: 5px; font-size: 12px; }
 .btn-wa:hover { background: #128C7E; color: #fff; }
+
+@media (max-width: 767px) {
+  .crm-header { padding: 18px 15px; text-align: center; }
+  .crm-header h2 { font-size: 18px; }
+  .table-crm td, .table-crm th { font-size: 12px; padding: 8px 6px !important; }
+  .badge-source { font-size: 10px; padding: 2px 6px; }
+}
 </style>
 
 <section class="content-header">

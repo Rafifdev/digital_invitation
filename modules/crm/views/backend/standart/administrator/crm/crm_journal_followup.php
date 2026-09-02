@@ -26,6 +26,17 @@
 .table-journal td { font-size: 13px; vertical-align: middle !important; }
 .cat-pill { display: inline-block; padding: 5px 14px; border-radius: 20px; font-size: 12px; font-weight: 600; margin: 3px; cursor: pointer; border: 2px solid #dee2e6; color: #555; transition: all 0.2s; }
 .cat-pill:hover, .cat-pill.active { background: #3498db; color: #fff; border-color: #3498db; }
+
+@media (max-width: 767px) {
+  .crm-header { padding: 18px 15px; text-align: center; }
+  .crm-header h2 { font-size: 18px; }
+  .crm-header .text-right { text-align: center !important; margin-top: 15px; }
+  .stat-box { padding: 10px 12px; margin-bottom: 10px; }
+  .stat-box .num { font-size: 22px; }
+  .stat-box .lbl { font-size: 10px; }
+  .filter-section .col-md-2 { margin-bottom: 8px; }
+  .cat-pill { padding: 4px 10px; font-size: 11px; }
+}
 </style>
 
 <section class="content-header">
