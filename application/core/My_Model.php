@@ -30,7 +30,9 @@ class MY_Model extends CI_Model {
     public function change($id = NULL, $data = array())
     {        
         $this->db->where($this->primary_key, $id);
-        return $this->db->update($this->table_name, $data);
+        $this->db->update($this->table_name, $data);
+
+        return $this->db->affected_rows();
     }
 
     public function find($id = NULL, $select_field = [])
@@ -83,13 +85,7 @@ class MY_Model extends CI_Model {
 
     public function scurity($input)
     {
-        if (is_array($input)) {
-            return array_map(array($this, 'scurity'), $input);
-        }
-        if ($this->db->conn_id instanceof mysqli) {
-            return mysqli_real_escape_string($this->db->conn_id, (string)$input);
-        }
-        return $this->db->escape_str($input);
+        return mysqli_real_escape_string($this->db->conn_id, $input);
     }
 
     public function generate_url($field, $text = null, $except = null)

@@ -2,7 +2,13 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 
-// Init section
+/**
+*| --------------------------------------------------------------------------
+*| Doc Controller
+*| --------------------------------------------------------------------------
+*| For see your board
+*|
+*/
 class Doc extends Admin	
 {
 	

@@ -2,7 +2,13 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 
-// Init section
+/**
+*| --------------------------------------------------------------------------
+*| Rest Controller
+*| --------------------------------------------------------------------------
+*| rest site
+*|
+*/
 class Rest extends Admin	
 {
 	

@@ -230,7 +230,7 @@ $(document).ready(function() {
             'fast');
     });
 
-    // $('.web-body').addClass('sidebar-collapse');
+    $('.web-body').addClass('sidebar-collapse');
     $('.sidebar-toggle[data-toggle="offcanvas"]').hide();
 
     $(document).on('click', 'center span.btn-build-page', function() {

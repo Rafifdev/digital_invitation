@@ -1046,7 +1046,7 @@
 <script src="<?= BASE_ASSET; ?>web-doc/js/layout.js"></script>
 <script type="text/javascript">
    $(document).ready(function(){
-     // sidebar collapse removed to keep sidebar open by default
+     $('.web-body').addClass('sidebar-collapse');
    })
 </script>
 

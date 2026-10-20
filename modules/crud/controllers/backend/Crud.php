@@ -2,7 +2,13 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 
-// Init section
+/**
+*| --------------------------------------------------------------------------
+*| Crud Controller
+*| --------------------------------------------------------------------------
+*| crud site
+*|
+*/
 class Crud extends Admin	
 {
 	

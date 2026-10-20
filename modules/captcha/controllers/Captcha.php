@@ -1,7 +1,13 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-// Init section
+/**
+*| --------------------------------------------------------------------------
+*| Captcha Controller
+*| --------------------------------------------------------------------------
+*| Captcha site
+*|
+*/
 class Captcha extends Admin	
 {
 	

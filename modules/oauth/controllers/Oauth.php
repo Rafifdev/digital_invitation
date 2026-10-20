@@ -1,7 +1,13 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-// Init section
+/**
+*| --------------------------------------------------------------------------
+*| Oauth Controller
+*| --------------------------------------------------------------------------
+*| Oauth site
+*|
+*/
 class Oauth extends Admin	
 {
 	

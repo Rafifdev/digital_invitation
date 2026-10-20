@@ -2,7 +2,13 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 
-// Init section
+/**
+*| --------------------------------------------------------------------------
+*| Setting Controller
+*| --------------------------------------------------------------------------
+*| setting site
+*|
+*/
 class Setting extends Admin	
 {
 	
@@ -50,6 +56,10 @@ class Setting extends Admin
 		$this->render('backend/standart/administrator/setting/setting_general', $this->data);
 	}
 
+	/**
+	* Update settings
+	*
+	*/
 	public function save()
 	{
 		if (!$this->is_allowed('setting_update', false)) {
@@ -65,7 +75,7 @@ class Setting extends Admin
 		$this->form_validation->set_rules('site_name', 'Site Name', 'trim|required');
 		$this->form_validation->set_rules('email', 'Email', 'trim|required|valid_email');
 		$this->form_validation->set_rules('encryption_key', 'Encryption Key', 'trim|required');
-		$this->form_validation->set_rules('sess_expiration', 'Session Expiration', 'trim|numeric');
+		$this->form_validation->set_rules('sess_expiration', 'Encryption Key', 'trim|numeric');
 		$this->form_validation->set_rules('sess_time_to_update', 'Session Time to Update', 'trim|numeric');
 		$this->form_validation->set_rules('global_xss_filtering', 'Global XSS Filtering', 'trim|required');
 		$this->form_validation->set_rules('csrf_token_name', 'CSRF Token Name', 'trim|required');

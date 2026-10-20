@@ -1,6 +1,6 @@
 
-<div class="table-wrapper table-responsive">
-<table class="table table-bordered table-striped" id="diagnosis_list">
+ <div class="table-wrapper">
+ <table class="table table-responsive table table-bordered table-striped"  id="diagnosis_list">
    <thead>
       <tr>
                            <th width="20" rowspan="2" valign="midle" style="vertical-align: middle; text-align: center;"><?= cclang('no') ?></th>

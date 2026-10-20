@@ -2,7 +2,13 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 
-// Init section
+/**
+*| --------------------------------------------------------------------------
+*| Module Controller
+*| --------------------------------------------------------------------------
+*| Module site
+*|
+*/
 class Module extends Admin	
 {
 	

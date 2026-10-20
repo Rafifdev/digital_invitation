@@ -380,19 +380,10 @@ class CI_Profiler
      */
     protected function _render()
     {
-        $is_json = (
-            self::$CI->input->is_ajax_request() ||
-            (isset($_SERVER['HTTP_ACCEPT']) && strpos($_SERVER['HTTP_ACCEPT'], 'application/json') !== false) ||
-            (method_exists(self::$CI->output, 'get_content_type') && self::$CI->output->get_content_type() === 'application/json')
-        );
-
-        if ($is_json)
+        if (self::$CI->input->is_ajax_request())
         {
-            if (!headers_sent())
-            {
-                $use_open_handler = $this->_set_storage();
-                @self::$debugbar->sendDataInHeaders($use_open_handler);
-            }
+            $use_open_handler = $this->_set_storage();
+            self::$debugbar->sendDataInHeaders($use_open_handler);
             $return = NULL;
         }
         else

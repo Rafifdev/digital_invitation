@@ -2,7 +2,13 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 
-// Init section
+/**
+*| --------------------------------------------------------------------------
+*| Form Asdasd Controller
+*| --------------------------------------------------------------------------
+*| Form Asdasd site
+*|
+*/
 class Form_asdasd extends Admin	
 {
 	

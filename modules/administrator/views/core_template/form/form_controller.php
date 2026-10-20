@@ -2,7 +2,13 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 
-// Init section
+/**
+*| --------------------------------------------------------------------------
+*| <?= ucwords(clean_snake_case($table_name)); ?> Controller
+*| --------------------------------------------------------------------------
+*| <?= ucwords(clean_snake_case($table_name)); ?> site
+*|
+*/
 class <?= ucwords($table_name); ?> extends Admin	
 {
 	

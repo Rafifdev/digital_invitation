@@ -2,7 +2,13 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 
-// Init section
+/**
+*| --------------------------------------------------------------------------
+*| Blog Controller
+*| --------------------------------------------------------------------------
+*| Blog site
+*|
+*/
 class Blog extends Admin	
 {
 	

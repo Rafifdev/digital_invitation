@@ -2,7 +2,13 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 
-// Init section
+/**
+*| --------------------------------------------------------------------------
+*| Menu Controller
+*| --------------------------------------------------------------------------
+*| menu site
+*|
+*/
 class Menu extends Admin	
 {
 	public function __construct()

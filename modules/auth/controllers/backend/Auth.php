@@ -1,7 +1,13 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-// Init section
+/**
+*| --------------------------------------------------------------------------
+*| Auth Controller
+*| --------------------------------------------------------------------------
+*| For authentication
+*|
+*/
 class Auth extends Admin	
 {
 	
@@ -17,7 +23,7 @@ class Auth extends Admin
 	public function login()
 	{
 		if ($this->aauth->is_loggedin()) {
-			redirect('administrator/dashboard','refresh');
+			redirect('administrator/user/profile','refresh');
 		}
 		$data = [];
 		$this->config->load('site');
@@ -33,12 +39,7 @@ class Auth extends Admin
                 if ($ref) {
 					redirect($ref,'refresh');
                 } else {
-                    $is_karyawan = $this->db->get_where('hr_karyawan', ['user_id' => get_user_data('id')])->row();
-                    if ($is_karyawan && !$this->aauth->is_admin()) {
-                        redirect('administrator/hr_profile','refresh');
-                    } else {
-					    redirect('administrator/dashboard','refresh');
-                    }
+					redirect('/administrator/user/profile','refresh');
                 }
 
 			} else {
