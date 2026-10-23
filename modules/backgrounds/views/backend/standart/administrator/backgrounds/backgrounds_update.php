@@ -93,15 +93,13 @@
                                                 <div class="form-group ">
                             <label for="category" class="col-sm-2 control-label">Kategori Latar</label>
                             <div class="col-sm-8">
-                                <select class="form-control chosen chosen-select" name="category" id="category" data-placeholder="Pilih Kategori Visual">
-                                    <?php $current_cat = isset($backgrounds) ? $backgrounds->category : set_value('category'); ?>
-                                    <option <?= $current_cat == 'Floral & Botanical' ? 'selected' : ''; ?> value="Floral & Botanical">Floral & Botanical</option>
-                                    <option <?= $current_cat == 'Tekstur & Kertas' ? 'selected' : ''; ?> value="Tekstur & Kertas">Tekstur & Kertas</option>
-                                    <option <?= $current_cat == 'Ornamen Islami' ? 'selected' : ''; ?> value="Ornamen Islami">Ornamen Islami</option>
-                                    <option <?= $current_cat == 'Geometris & Minimalis' ? 'selected' : ''; ?> value="Geometris & Minimalis">Geometris & Minimalis</option>
-                                    <option <?= $current_cat == 'Tradisional Nusantara' ? 'selected' : ''; ?> value="Tradisional Nusantara">Tradisional Nusantara</option>
-                                    <option <?= $current_cat == 'Lainnya' ? 'selected' : ''; ?> value="Lainnya">Lainnya</option>
+                                <select class="form-control chosen chosen-select" name="category" id="category" data-placeholder="Pilih Kategori Background">
+                                    <option value=""></option>
+                                    <?php foreach (db_get_all_data('background_categories') as $row): ?>
+                                    <option <?= (isset($backgrounds) && $backgrounds->category == $row->name) || set_value('category') == $row->name ? 'selected' : ''; ?> value="<?= $row->name; ?>"><?= $row->name; ?></option>
+                                    <?php endforeach; ?>
                                 </select>
+                                <small class="info help-block">Pilih kategori background dari data master kategori background</small>
                             </div>
                         </div>
                                                  

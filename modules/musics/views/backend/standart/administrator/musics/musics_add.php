@@ -106,15 +106,12 @@
                             <label for="category" class="col-sm-2 control-label">Kategori Musik</label>
                             <div class="col-sm-8">
                                 <select class="form-control chosen chosen-select" name="category" id="category" data-placeholder="Pilih Kategori Musik">
-                                    <?php $current_cat = isset($musics) ? $musics->category : set_value('category'); ?>
-                                    <option <?= $current_cat == 'Romantis' ? 'selected' : ''; ?> value="Romantis">Romantis</option>
-                                    <option <?= $current_cat == 'Islami' ? 'selected' : ''; ?> value="Islami">Islami</option>
-                                    <option <?= $current_cat == 'Akustik / Pop' ? 'selected' : ''; ?> value="Akustik / Pop">Akustik / Pop</option>
-                                    <option <?= $current_cat == 'Klasik' ? 'selected' : ''; ?> value="Klasik">Klasik</option>
-                                    <option <?= $current_cat == 'Tradisional' ? 'selected' : ''; ?> value="Tradisional">Tradisional</option>
-                                    <option <?= $current_cat == 'Instrumental' ? 'selected' : ''; ?> value="Instrumental">Instrumental</option>
-                                    <option <?= $current_cat == 'Lainnya' ? 'selected' : ''; ?> value="Lainnya">Lainnya</option>
+                                    <option value=""></option>
+                                    <?php foreach (db_get_all_data('music_categories') as $row): ?>
+                                    <option <?= (isset($musics) && $musics->category == $row->name) || set_value('category') == $row->name ? 'selected' : ''; ?> value="<?= $row->name; ?>"><?= $row->name; ?></option>
+                                    <?php endforeach; ?>
                                 </select>
+                                <small class="info help-block">Pilih kategori musik dari data master kategori musik</small>
                             </div>
                         </div>
                                                  
