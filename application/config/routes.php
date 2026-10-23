@@ -86,6 +86,59 @@ $route[ADMIN_NAMESPACE_URL.'/(:any)/(:any)/(:any)/(:any)'] = '$1/backend/$1/$2/$
 $route['api/user/(:any)'] = 'api/user/$1';
 $route['api/group/(:any)'] = 'api/group/$1';
 
+// ==========================================
+// InfoMase Wedding Digital API v1 (Full Specification)
+// ==========================================
+
+// A. Auth
+$route['api/v1/auth/register']      = 'api/v1/auth_register';
+$route['api/v1/auth/login']         = 'api/v1/auth_login';
+$route['api/v1/auth/me']            = 'api/v1/auth_me';
+$route['api/v1/auth/refresh-token'] = 'api/v1/auth_refresh_token';
+$route['api/v1/auth/logout']        = 'api/v1/auth_logout';
+
+// B. Templates
+$route['api/v1/templates']          = 'api/v1/templates';
+
+// C. Invitations CRUD & Actions
+$route['api/v1/invitations/check-slug']                   = 'api/v1/invitations_check_slug';
+$route['api/v1/invitations/(:any)/stats']                = 'api/v1/invitations_stats/$1';
+$route['api/v1/invitations/(:any)/upload/photo']         = 'api/v1/upload_photo/$1';
+$route['api/v1/invitations/(:any)/upload/gallery-batch'] = 'api/v1/upload_gallery_batch/$1';
+$route['api/v1/invitations/(:any)/upload/audio']         = 'api/v1/upload_audio/$1';
+$route['api/v1/invitations/(:any)/assets']               = 'api/v1/delete_asset/$1';
+
+// F. Guest Management
+$route['api/v1/invitations/(:any)/guests/(:any)/wa-message'] = 'api/v1/guests_wa_message/$1/$2';
+$route['api/v1/invitations/(:any)/guests/bulk']              = 'api/v1/guests_bulk/$1';
+$route['api/v1/invitations/(:any)/guests/(:any)']            = 'api/v1/guests_item/$1/$2';
+$route['api/v1/invitations/(:any)/guests']                   = 'api/v1/guests_index/$1';
+
+// G. RSVP & Guestbook Management
+$route['api/v1/invitations/(:any)/rsvps/export'] = 'api/v1/rsvps_export/$1';
+$route['api/v1/invitations/(:any)/rsvps/(:any)']  = 'api/v1/rsvps_item/$1/$2';
+$route['api/v1/invitations/(:any)/rsvps']         = 'api/v1/rsvps_index/$1';
+
+// C. Invitations Detail / Update / Delete & List / Create
+$route['api/v1/invitations/(:any)'] = 'api/v1/invitations_item/$1';
+$route['api/v1/invitations']        = 'api/v1/invitations_index';
+
+// D. Public Endpoints
+$route['api/v1/public/invitations/(:any)/rsvp']   = 'api/v1/public_rsvp/$1';
+$route['api/v1/public/invitations/(:any)/wishes'] = 'api/v1/public_wishes/$1';
+$route['api/v1/public/invitations/(:any)']        = 'api/v1/public_invitation/$1';
+
+// Legacy endpoints for backward compatibility
+$route['api/v1/invitation/(:any)/rsvp']   = 'api/invitation/rsvp/$1';
+$route['api/v1/invitation/(:any)/wishes'] = 'api/invitation/wishes/$1';
+$route['api/v1/invitation/(:any)']        = 'api/invitation/detail/$1';
+$route['api/v1/catalog/templates']        = 'api/invitation/catalog_templates';
+$route['api/v1/catalog/musics']           = 'api/invitation/catalog_musics';
+$route['api/v1/catalog/backgrounds']      = 'api/invitation/catalog_backgrounds';
+$route['api/v1/catalog/packages']         = 'api/invitation/catalog_packages';
+$route['api/v1/upload']                   = 'api/invitation/upload';
+
+
 $route['api/(:any)'] = '$1/api/$1';
 $route['api/(:any)/(:any)'] = '$1/api/$1/$2';
 $route['api/(:any)/(:any)/(:any)'] = '$1/api/$1/$2/$3';

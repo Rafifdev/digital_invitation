@@ -89,7 +89,8 @@ defined('EXIT__AUTO_MAX')      OR define('EXIT__AUTO_MAX', 125); // highest auto
 //CUSTOM
 $http = 'http' . ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') ? 's' : '') . '://';
 $fo = str_replace("index.php","", $_SERVER['SCRIPT_NAME']);
-$base = $base = "$http" . $_SERVER['SERVER_NAME'] . ":" . $_SERVER['SERVER_PORT'] . "" . $fo;
+$port = (isset($_SERVER['SERVER_PORT']) && in_array($_SERVER['SERVER_PORT'], ['80', '443'])) ? '' : ':' . $_SERVER['SERVER_PORT'];
+$base = "$http" . $_SERVER['SERVER_NAME'] . $port . $fo;
 
 defined('BASE_URL') 			OR define('BASE_URL'			, $base);
 defined('BASE_ASSET') 			OR define('BASE_ASSET'			, BASE_URL . 'asset/');

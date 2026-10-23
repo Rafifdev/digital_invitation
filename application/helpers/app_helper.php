@@ -217,14 +217,39 @@ if(!function_exists('display_menu_admin')) {
 
 		   		$perms = 'menu_'.strtolower(str_replace(' ', '_', $row->label));
 
-		   		$links = explode('/', $row->link);
-
-				$segments = array_slice($ci->uri->segment_array(), 0, count($links));
-				
-		   		if (implode('/', $segments) == implode('/', $links)) {
-		   			$active = 'active';
+		   		// Smart active detection supporting query strings
+		   		$active = '';
+		   		$row_link_clean = trim($row->link, '/');
+		   		$menu_query_params = [];
+		   		if (strpos($row_link_clean, '?') !== false) {
+		   			list($path, $qs) = explode('?', $row_link_clean, 2);
+		   			parse_str($qs, $menu_query_params);
 		   		} else {
-		   			$active = '';
+		   			$path = $row_link_clean;
+		   		}
+
+		   		$links = explode('/', $path);
+		   		$segments = array_slice($ci->uri->segment_array(), 0, count($links));
+
+		   		if (implode('/', $segments) == implode('/', $links)) {
+		   			if (!empty($menu_query_params)) {
+		   				$all_param_match = true;
+		   				foreach ($menu_query_params as $qk => $qv) {
+		   					if ($ci->input->get($qk) != $qv) {
+		   						$all_param_match = false;
+		   						break;
+		   					}
+		   				}
+		   				if ($all_param_match) {
+		   					$active = 'active';
+		   				}
+		   			} else {
+		   				if ($ci->input->get('q') && in_array(implode('/', $segments), ['administrator/invitations'])) {
+		   					$active = '';
+		   				} else {
+		   					$active = 'active';
+		   				}
+		   			}
 		   		}
 		   		$link = filter_var($row->link, FILTER_VALIDATE_URL) ? $row->link : base_url($row->link);
 		   		if ($row->type == 'label') {

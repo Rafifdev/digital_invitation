@@ -595,3 +595,8 @@ $config['allow_any_cors_domain'] = true;
 |
 */
 $config['allowed_cors_origins'] = [''];
+
+
+// Allow public access without API Key for Wedding Digital
+$config['auth_override_class_method']['invitation']['*'] = 'none';
+$config['auth_override_class_method']['v1']['*'] = 'none';

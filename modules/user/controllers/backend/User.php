@@ -84,6 +84,7 @@ class User extends Admin
 
 			$save_data = [
 				'full_name' 	=> $this->input->post('full_name'),
+				'phone_number' 	=> $this->input->post('phone_number'),
 				'avatar' 		=> 'default.png',
 				'date_created'	=> date('Y-m-d H:i:s')
 			];
@@ -181,6 +182,7 @@ class User extends Admin
 
 			$save_data = [
 				'full_name' 	=> $this->input->post('full_name'),
+				'phone_number' 	=> $this->input->post('phone_number'),
 			];
 
 			if (!empty($user_avatar_name)) {

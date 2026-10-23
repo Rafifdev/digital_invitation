@@ -87,6 +87,7 @@
                         </div>
 
                                                 
+                        <hr style="margin: 30px 0 25px 0; border-top: 1px solid #e9ecef;">
                         <div class="message"></div>
                         <div class="row-fluid col-md-7">
                             <button class="btn btn-flat btn-primary btn_save btn_action" id="btn_save" data-stype='stay' title="<?= cclang('save_button'); ?> (Ctrl+s)">

@@ -101,6 +101,15 @@ jQuery(document).ready(domo);
                     </div>
 
                     <div class="form-group ">
+                        <label for="phone_number" class="col-sm-2 control-label">No. Handphone / WhatsApp</label>
+
+                        <div class="col-sm-8">
+                          <input type="text" class="form-control" name="phone_number" id="phone_number" placeholder="Contoh: 08123456789" value="<?= set_value('phone_number'); ?>">
+                          <small class="info help-block">Nomor kontak aktif pengguna.</small>
+                        </div>
+                    </div>
+
+                    <div class="form-group ">
                         <label for="password" class="col-sm-2 control-label"><?= cclang('password') ?> <i class="required">*</i></label>
 
                         <div class="col-sm-6">
